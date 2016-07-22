@@ -1,0 +1,58 @@
+server:
+  port: 8082
+
+parsed_topics: &PARSED_TOPIC
+  # All parsed messages are of type text/plain
+  contentType: text/plain
+
+  # Must define consumer.headerMode RAW to prevent spring/cloud-stream from trying to parse
+  #    embedded headers that don't exist.
+  consumer:
+    headerMode: raw
+
+spring.cloud.stream:
+      kafka:
+        binder:
+          # Kafka/Zookeeper host:port
+          brokers: localhost:9092
+          zkNodes: localhost:2181
+
+#spring.cloud.stream:
+      bindings:
+
+        # Collector channel
+        collector:
+          <<: *PARSED_TOPIC
+          destination: openbmp.parsed.collector
+
+        # Router channel
+        router:
+          <<: *PARSED_TOPIC
+          destination: openbmp.parsed.router
+
+        # peer channel
+        peer:
+          <<: *PARSED_TOPIC
+          destination: openbmp.parsed.peer
+
+        # unicast_prefix channel
+        unicast_prefix:
+          <<: *PARSED_TOPIC
+          destination: openbmp.parsed.unicast_prefix
+
+        # LS node channel
+        ls_node:
+          <<: *PARSED_TOPIC
+          destination: openbmp.parsed.ls_node
+
+        # LS Link channel
+        ls_link:
+          <<: *PARSED_TOPIC
+          destination: openbmp.parsed.ls_link
+
+        # LS Prefix channel
+        ls_prefix:
+          <<: *PARSED_TOPIC
+          destination: openbmp.parsed.ls_prefix
+
+

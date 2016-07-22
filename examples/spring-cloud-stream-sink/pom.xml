@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>spring-cloud-stream-sink-example</artifactId>
+	<packaging>jar</packaging>
+	<name>spring-cloud-stream-sink-example</name>
+	<description>OpenBMP example using spring cloud stream sink module</description>
+
+	<groupId>org.openbmp.api.example</groupId>
+	<version>0.1.0.SNAPSHOT</version>
+
+	<properties>
+		<start-class>demo.SinkApplication</start-class>
+		<spring-cloud-version>1.0.2.RELEASE</spring-cloud-version>
+		<spring-framework-version>4.3.1.RELEASE</spring-framework-version>
+		<spring-boot-version>1.3.6.RELEASE</spring-boot-version>
+		<openbmp-api-version>0.1.0-SNAPSHOT</openbmp-api-version>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${spring-framework-version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-stream</artifactId>
+			<version>${spring-cloud-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-stream-binder-kafka</artifactId>
+			<version>${spring-cloud-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<version>${spring-boot-version}</version>
+			<optional>true</optional>
+		</dependency>
+
+        <dependency>
+            <groupId>org.openbmp.api</groupId>
+            <artifactId>openbmp-api-message</artifactId>
+            <version>${openbmp-api-version}</version>
+        </dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot-version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+		</plugins>
+	</build>
+
+</project>

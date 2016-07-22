@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.openbmp.api</groupId>
+    <artifactId>openbmp-api-message</artifactId>
+    <packaging>jar</packaging>
+
+    <name>openbmp-api-message</name>
+    <url>http://www.openbmp.org</url>
+
+    <properties>
+        <build.number>SNAPSHOT</build.number>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <junit-version>3.8.1</junit-version>
+        <supercsv-version>2.4.0</supercsv-version>
+        <slf4j-version>1.7.21</slf4j-version>
+        <jackson-asl-version>1.9.13</jackson-asl-version>
+    </properties>
+
+    <version>0.1.0-${build.number}</version>
+
+    <build>
+        <plugins>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>net.sf.supercsv</groupId>
+            <artifactId>super-csv</artifactId>
+            <version>${supercsv-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>${jackson-asl-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>${jackson-asl-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit-version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
