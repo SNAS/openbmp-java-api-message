@@ -36,7 +36,7 @@ public class LogSink {
     public void log_Router(Object payload) {
 
         Message msg = new Message(payload.toString());
-        Router router = new Router(msg.getContent());
+        Router router = new Router(msg.getVersion(), msg.getContent());
 
         logger.info("ROUTER: " + router.toJsonPretty());
     }
@@ -54,7 +54,7 @@ public class LogSink {
     public void log_UnicastPrefix(Object payload) {
 
         Message msg = new Message(payload.toString());
-        UnicastPrefix unicastPrefix = new UnicastPrefix(msg.getContent());
+        UnicastPrefix unicastPrefix = new UnicastPrefix(msg.getVersion(), msg.getContent());
 
         logger.info("UNICAST_PREFIX: " + unicastPrefix.toJsonPretty());
     }
@@ -72,7 +72,7 @@ public class LogSink {
 	public void log_LsLink(Object payload) {
 
         Message msg = new Message(payload.toString());
-		LsLink ls_link = new LsLink(msg.getContent());
+		LsLink ls_link = new LsLink(msg.getVersion(), msg.getContent());
 
 		logger.info("LS LINK: " + ls_link.toJsonPretty());
 	}

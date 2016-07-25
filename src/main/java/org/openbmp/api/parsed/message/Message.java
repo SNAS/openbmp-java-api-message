@@ -13,7 +13,7 @@ package org.openbmp.api.parsed.message;
  *      @See http://openbmp.org/#!docs/MESSAGE_BUS_API.md for more details on structure of message.
  */
 public class Message {
-    private String version;
+    private Float version;
     private String collector_hash_id;
     private long length;
     private long records;
@@ -55,7 +55,7 @@ public class Message {
              * attribute names are from http://openbmp.org/#!docs/MESSAGE_BUS_API.md headers
              */
             if (attr.equals("V")) {
-                this.version = value;
+                this.version = Float.valueOf(value);
             } else if (attr.equals("C_HASH_ID")) {
                 this.collector_hash_id = value;
             } else if (attr.equals("L")) {
@@ -71,7 +71,7 @@ public class Message {
     /*
      * Getters
      */
-    public String getVersion() {
+    public Float getVersion() {
         return version;
     }
     public String getCollector_hash_id() {

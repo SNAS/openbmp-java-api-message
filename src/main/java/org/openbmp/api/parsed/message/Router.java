@@ -31,12 +31,23 @@ public class Router extends Base {
     /**
      * Handle the message by parsing it and storing the data in memory.
      *
-     * @param data
+     * @param version       Float representation of maximum message bus specification version supported.
+     *                          See http://openbmp.org/#!docs/MESSAGE_BUS_API.md for more details.
+     * @param data          TSV data (MUST not include the headers)
      */
-    public Router(String data) {
+    public Router(Float version, String data) {
         super();
-        headerNames = new String [] { "action", "seq", "name", "hash", "ip_address", "description", "term_code",
-                                      "term_reason", "init_data", "term_data", "timestamp", "bgp_id" };
+
+        spec_version = version;
+
+        if (spec_version >= 1.2) {
+            headerNames = new String[]{"action", "seq", "name", "hash", "ip_address", "description", "term_code",
+                    "term_reason", "init_data", "term_data", "timestamp", "bgp_id"};
+        }
+        else {
+            headerNames = new String[]{"action", "seq", "name", "hash", "ip_address", "description", "term_code",
+                    "term_reason", "init_data", "term_data", "timestamp"};
+        }
 
         parse(data);
     }
@@ -50,20 +61,39 @@ public class Router extends Base {
      */
     protected CellProcessor[] getProcessors() {
 
-        final CellProcessor[] processors = new CellProcessor[] {
-                new NotNull(),                      // action
-                new ParseLong(),                    // seq
-                new ParseNullAsEmpty(),             // name
-                new NotNull(),                      // hash
-                new NotNull(),                      // IP Address
-                new ParseNullAsEmpty(),             // Description
-                new Optional(new ParseInt()),       // Term code
-                new ParseNullAsEmpty(),             // Term reason
-                new ParseNullAsEmpty(),             // Init data
-                new ParseNullAsEmpty(),             // Term data
-                new ParseTimestamp(),               // Timestamp
-                new ParseNullAsEmpty()              // Global BGP-ID for router
-        };
+        final CellProcessor[] processors;
+
+        if (spec_version >= 1.2) {
+            processors = new CellProcessor[]{
+                    new NotNull(),                      // action
+                    new ParseLong(),                    // seq
+                    new ParseNullAsEmpty(),             // name
+                    new NotNull(),                      // hash
+                    new NotNull(),                      // IP Address
+                    new ParseNullAsEmpty(),             // Description
+                    new Optional(new ParseInt()),       // Term code
+                    new ParseNullAsEmpty(),             // Term reason
+                    new ParseNullAsEmpty(),             // Init data
+                    new ParseNullAsEmpty(),             // Term data
+                    new ParseTimestamp(),               // Timestamp
+                    new ParseNullAsEmpty()              // Global BGP-ID for router
+            };
+        }
+        else {
+            processors = new CellProcessor[]{
+                    new NotNull(),                      // action
+                    new ParseLong(),                    // seq
+                    new ParseNullAsEmpty(),             // name
+                    new NotNull(),                      // hash
+                    new NotNull(),                      // IP Address
+                    new ParseNullAsEmpty(),             // Description
+                    new Optional(new ParseInt()),       // Term code
+                    new ParseNullAsEmpty(),             // Term reason
+                    new ParseNullAsEmpty(),             // Init data
+                    new ParseNullAsEmpty(),             // Term data
+                    new ParseTimestamp()               // Timestamp
+            };
+        }
 
         return processors;
     }

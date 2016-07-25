@@ -26,12 +26,20 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Format class for collector parsed messages (openbmp.parsed.collector)
+ * Base class for parsing openbmp.parsed.* messages.
+ *
+ * See http://openbmp.org/#!docs/MESSAGE_BUS_API.md for more details.
  *
  * Schema Version: 1.2
  *
+ * @note The schema version is the max version supported.  Each extended class is responsible for handling
+ *      backwards compatibility.
+ *
  */
 public abstract class Base {
+    private final Float DEFAULT_SPEC_VERSION = new Float(1.2);     // Default message bus specification version (max) supported
+    protected Float spec_version;                                    // Configured message bus specification version (max) supported
+
     /**
      * column field header names
      *      Will be the MAP key for fields, order matters and must match TSV order of fields.
@@ -43,18 +51,35 @@ public abstract class Base {
     protected Base() {
         headerNames = null;
         rowMap = new ArrayList<Map<String, Object>>();
+        spec_version = DEFAULT_SPEC_VERSION;
     }
 
     private final Logger logger = LoggerFactory.getLogger(Base.class);
 
     /**
      * Parse TSV rows of data from message
+     *      Defaults to use current message bus version
      *
      * @param data          TSV data (MUST not include the headers)
      *
      * @return  True if error, False if no errors
      */
     public boolean parse(String data) {
+        return parse(DEFAULT_SPEC_VERSION, data);
+    }
+
+        /**
+         * Parse TSV rows of data from message
+         *
+         * @param version       Float representation of maximum message bus specification version supported.
+         *                          See http://openbmp.org/#!docs/MESSAGE_BUS_API.md for more details.
+         * @param data          TSV data (MUST not include the headers)
+         *
+         * @return  True if error, False if no errors
+         */
+    public boolean parse(Float version, String data) {
+
+        this.spec_version = version;
 
         final CellProcessor[] processors = getProcessors();
         ICsvMapReader mapReader = null;
