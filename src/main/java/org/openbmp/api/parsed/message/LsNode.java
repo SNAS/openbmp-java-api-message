@@ -39,7 +39,7 @@ public class LsNode extends Base {
             headerNames = new String[]{"action", "seq", "hash", "base_attr_hash", "router_hash", "router_ip", "peer_hash", "peer_ip",
                                        "peer_asn", "timestamp", "igp_router_id", "router_id", "routing_id", "ls_id", "mt_id",
                                        "ospf_area_id", "isis_area_id", "protocol", "flags", "as_path", "local_pref",
-                                       "med", "nexthop", "name", "isPrePolicy", "isAdjRibIn", "isPrePolicy", "isAdjRibIn"};
+                                       "med", "nexthop", "name", "isPrePolicy", "isAdjRibIn"};
         }
         else {
             headerNames = new String[]{ "action", "seq", "hash", "base_attr_hash", "router_hash", "router_ip", "peer_hash", "peer_ip",
