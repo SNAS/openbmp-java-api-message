@@ -30,15 +30,15 @@ import java.util.Map;
  *
  * See http://openbmp.org/#!docs/MESSAGE_BUS_API.md for more details.
  *
- * Schema Version: 1.2
+ * Schema Version: 1.3
  *
  * @note The schema version is the max version supported.  Each extended class is responsible for handling
  *      backwards compatibility.
  *
  */
 public abstract class Base {
-    private final Float DEFAULT_SPEC_VERSION = new Float(1.2);     // Default message bus specification version (max) supported
-    protected Float spec_version;                                    // Configured message bus specification version (max) supported
+    private final Float DEFAULT_SPEC_VERSION = new Float(1.3);     // Default message bus specification version (max) supported
+    protected Float spec_version;                                     // Configured message bus specification version (max) supported
 
     /**
      * column field header names

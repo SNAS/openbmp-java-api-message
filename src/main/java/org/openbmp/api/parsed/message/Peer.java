@@ -18,7 +18,7 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 /**
  * Format class for peer parsed messages (openbmp.parsed.peer)
  *
- * Schema Version: 1.2
+ * Schema Version: 1.3
  *
  */
 public class Peer extends Base {
@@ -36,6 +36,7 @@ public class Peer extends Base {
                                       "remote_holddown", "adv_holddown", "bmp_reason", "bgp_error_code",
                                       "bgp_error_sub_code", "error_text", "isL3VPN", "isPrePolicy", "isIPv4"};
 
+        // TODO: Change below to supply version when version is required
         parse(data);
     }
 

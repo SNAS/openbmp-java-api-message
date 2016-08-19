@@ -36,6 +36,7 @@ public class Collector extends Base {
         super();
         headerNames = new String [] { "action", "seq", "admin_id", "hash", "routers", "router_count", "timestamp" };
 
+        // TODO: Change below to supply version when version is required
         parse(data);
     }
 

@@ -40,7 +40,7 @@ public class Router extends Base {
 
         spec_version = version;
 
-        if (spec_version >= 1.2) {
+        if (version.compareTo((float) 1.2) >= 0)  {
             headerNames = new String[]{"action", "seq", "name", "hash", "ip_address", "description", "term_code",
                     "term_reason", "init_data", "term_data", "timestamp", "bgp_id"};
         }
@@ -49,7 +49,7 @@ public class Router extends Base {
                     "term_reason", "init_data", "term_data", "timestamp"};
         }
 
-        parse(data);
+        parse(version, data);
     }
 
     /**
@@ -63,7 +63,7 @@ public class Router extends Base {
 
         final CellProcessor[] processors;
 
-        if (spec_version >= 1.2) {
+        if (spec_version.compareTo((float) 1.2) >= 0)  {
             processors = new CellProcessor[]{
                     new NotNull(),                      // action
                     new ParseLong(),                    // seq
@@ -91,7 +91,7 @@ public class Router extends Base {
                     new ParseNullAsEmpty(),             // Term reason
                     new ParseNullAsEmpty(),             // Init data
                     new ParseNullAsEmpty(),             // Term data
-                    new ParseTimestamp()               // Timestamp
+                    new ParseTimestamp()                // Timestamp
             };
         }
 

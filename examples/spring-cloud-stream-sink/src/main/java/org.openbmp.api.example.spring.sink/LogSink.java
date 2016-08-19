@@ -29,7 +29,7 @@ public class LogSink {
         Message msg = new Message(payload.toString());
         Collector collector = new Collector(msg.getContent());
 
-        logger.info("COLLECTOR: " + collector.toJsonPretty());
+        logger.info("COLLECTOR("+ msg.getVersion() + "): " + collector.toJsonPretty());
     }
 
     @ServiceActivator(inputChannel=SinkInput.ROUTER)
@@ -38,7 +38,7 @@ public class LogSink {
         Message msg = new Message(payload.toString());
         Router router = new Router(msg.getVersion(), msg.getContent());
 
-        logger.info("ROUTER: " + router.toJsonPretty());
+        logger.info("ROUTER("+ msg.getVersion() + "): " + router.toJsonPretty());
     }
 
     @ServiceActivator(inputChannel=SinkInput.PEER)
@@ -47,7 +47,7 @@ public class LogSink {
         Message msg = new Message(payload.toString());
         Peer peer = new Peer(msg.getContent());
 
-        logger.info("PEER: " + peer.toJsonPretty());
+        logger.info("PEER("+ msg.getVersion() + "): " + peer.toJsonPretty());
     }
 
     @ServiceActivator(inputChannel=SinkInput.UNICAST_PREFIX)
@@ -56,16 +56,16 @@ public class LogSink {
         Message msg = new Message(payload.toString());
         UnicastPrefix unicastPrefix = new UnicastPrefix(msg.getVersion(), msg.getContent());
 
-        logger.info("UNICAST_PREFIX: " + unicastPrefix.toJsonPretty());
+        logger.info("UNICAST_PREFIX("+ msg.getVersion() + "): " + unicastPrefix.toJsonPretty());
     }
 
     @ServiceActivator(inputChannel=SinkInput.LS_NODE)
     public void log_LsNode(Object payload) {
 
         Message msg = new Message(payload.toString());
-        LsNode ls_node = new LsNode(msg.getContent());
+        LsNode ls_node = new LsNode(msg.getVersion(), msg.getContent());
 
-        logger.info("LS NODE: " + ls_node.toJsonPretty());
+        logger.info("LS NODE("+ msg.getVersion() + "): " + ls_node.toJsonPretty());
     }
 
     @ServiceActivator(inputChannel=SinkInput.LS_LINK)
@@ -74,15 +74,15 @@ public class LogSink {
         Message msg = new Message(payload.toString());
 		LsLink ls_link = new LsLink(msg.getVersion(), msg.getContent());
 
-		logger.info("LS LINK: " + ls_link.toJsonPretty());
+		logger.info("LS LINK("+ msg.getVersion() + "): " + ls_link.toJsonPretty());
 	}
 
     @ServiceActivator(inputChannel=SinkInput.LS_PREFIX)
     public void log_LsPrefix(Object payload) {
 
         Message msg = new Message(payload.toString());
-        LsPrefix ls_prefix = new LsPrefix(msg.getContent());
+        LsPrefix ls_prefix = new LsPrefix(msg.getVersion(), msg.getContent());
 
-        logger.info("LS PREFIX: " + ls_prefix.toJsonPretty());
+        logger.info("LS PREFIX("+ msg.getVersion() + "): " + ls_prefix.toJsonPretty());
     }
 }
