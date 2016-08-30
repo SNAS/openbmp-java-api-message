@@ -30,11 +30,14 @@ public class Peer extends Base {
      */
     public Peer(String data) {
         super();
-        headerNames = new String [] { "action", "seq", "hash", "router_hash", "name", "remote_bgp_id", "router_ip",
-                                      "timestamp", "remote_asn", "remote_ip", "peer_rd", "remote_port", "local_asn",
-                                      "local_ip", "local_port", "local_bgp_id", "info_data", "adv_cap", "recv_cap",
-                                      "remote_holddown", "adv_holddown", "bmp_reason", "bgp_error_code",
-                                      "bgp_error_sub_code", "error_text", "isL3VPN", "isPrePolicy", "isIPv4"};
+        
+        headerNames = new String [] { HeaderDefault.action.toString(),HeaderDefault.seq.toString(),HeaderDefault.hash.toString(),HeaderDefault.router_hash.toString(),HeaderDefault.name.toString(),
+					        		HeaderDefault.remote_bgp_id.toString(),HeaderDefault.router_ip.toString(),HeaderDefault.timestamp.toString(),HeaderDefault.remote_asn.toString(),
+					        		HeaderDefault.remote_ip.toString(),HeaderDefault.peer_rd.toString(),HeaderDefault.remote_port.toString(),HeaderDefault.local_asn.toString(),
+					        		HeaderDefault.local_ip.toString(),HeaderDefault.local_port.toString(),HeaderDefault.local_bgp_id.toString(),HeaderDefault.info_data.toString(),HeaderDefault.adv_cap.toString(),
+					        		HeaderDefault.recv_cap.toString(),HeaderDefault.remote_holddown.toString(),HeaderDefault.adv_holddown.toString(),HeaderDefault.bmp_reason.toString(),
+					        		HeaderDefault.bgp_error_code.toString(),HeaderDefault.bgp_error_sub_code.toString(),HeaderDefault.error_text.toString(),HeaderDefault.isL3VPN.toString(),
+					        		HeaderDefault.isPrePolicy.toString(),HeaderDefault.isIPv4.toString()};
 
         // TODO: Change below to supply version when version is required
         parse(data);

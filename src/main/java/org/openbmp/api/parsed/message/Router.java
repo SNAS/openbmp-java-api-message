@@ -39,14 +39,24 @@ public class Router extends Base {
         super();
 
         spec_version = version;
+        
+        // Minimum set of headers each Object will have.
+        String [] minimumHeaderNames =   new String[]{HeaderDefault.action.toString(),HeaderDefault.seq.toString(),HeaderDefault.name.toString(),HeaderDefault.hash.toString(),HeaderDefault.ip_address.toString(),
+										        		HeaderDefault.description.toString(),HeaderDefault.term_code.toString(),HeaderDefault.term_reason.toString(),HeaderDefault.init_data.toString(),HeaderDefault.term_data.toString(),
+										        		HeaderDefault.timestamp.toString()};
 
         if (version.compareTo((float) 1.2) >= 0)  {
-            headerNames = new String[]{"action", "seq", "name", "hash", "ip_address", "description", "term_code",
-                    "term_reason", "init_data", "term_data", "timestamp", "bgp_id"};
+        	
+        	// headers specific to v1.2 or greater
+        	String versionSpecificHeaders [] = new String[]{HeaderDefault.bgp_id.toString()};
+    		
+    		headerNames = new String[minimumHeaderNames.length + versionSpecificHeaders.length];
+    		System.arraycopy(minimumHeaderNames, 0, headerNames, 0, minimumHeaderNames.length);
+    		System.arraycopy(versionSpecificHeaders, 0, headerNames, minimumHeaderNames.length, versionSpecificHeaders.length);
+            
         }
         else {
-            headerNames = new String[]{"action", "seq", "name", "hash", "ip_address", "description", "term_code",
-                    "term_reason", "init_data", "term_data", "timestamp"};
+            headerNames = minimumHeaderNames;
         }
 
         parse(version, data);

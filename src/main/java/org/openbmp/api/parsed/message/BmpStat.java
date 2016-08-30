@@ -28,10 +28,11 @@ public class BmpStat extends Base {
      */
     public BmpStat(String data) {
         super();
-        headerNames = new String [] { "action", "seq", "router_hash", "router_ip", "peer_hash", "peer_ip",
-                                      "peer_asn", "timestamp", "rejected", "known_dup_updates", "known_dup_withdraws",
-                                      "invalid_cluster_list", "invalid_as_path", "invalid_originator",
-                                      "invalid_as_confed", "pre_policy", "post_policy"};
+        headerNames = new String [] { HeaderDefault.action.toString(),HeaderDefault.seq.toString(),HeaderDefault.router_hash.toString(),HeaderDefault.router_ip.toString(),
+        		HeaderDefault.peer_hash.toString(),HeaderDefault.peer_ip.toString(),HeaderDefault.peer_asn.toString(),HeaderDefault.timestamp.toString(),HeaderDefault.rejected.toString(),
+        		HeaderDefault.known_dup_updates.toString(),HeaderDefault.known_dup_withdraws.toString(),HeaderDefault.invalid_cluster_list.toString(),
+        		HeaderDefault.invalid_as_path.toString(),HeaderDefault.invalid_originator.toString(),HeaderDefault.invalid_as_confed.toString(),HeaderDefault.pre_policy.toString(),
+        		HeaderDefault.post_policy.toString()};
 
         parse(data);
     }

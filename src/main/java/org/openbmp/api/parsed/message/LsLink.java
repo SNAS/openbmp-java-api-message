@@ -35,35 +35,42 @@ public class LsLink extends Base {
         super();
 
         spec_version = version;
+        
+        // Minimum set of headers each Object will have. 
+        String [] minimumHeaderNames = new String[]{HeaderDefault.action.toString(),HeaderDefault.seq.toString(),HeaderDefault.hash.toString(),HeaderDefault.base_attr_hash.toString(),HeaderDefault.router_hash.toString(),
+												   HeaderDefault.router_ip.toString(),HeaderDefault.peer_hash.toString(),HeaderDefault.peer_ip.toString(),HeaderDefault.peer_asn.toString(),HeaderDefault.timestamp.toString(),
+												   HeaderDefault.igp_router_id.toString(),HeaderDefault.router_id.toString(),HeaderDefault.routing_id.toString(),HeaderDefault.ls_id.toString(),HeaderDefault.ospf_area_id.toString(),
+												   HeaderDefault.isis_area_id.toString(),HeaderDefault.protocol.toString(),HeaderDefault.as_path.toString(),HeaderDefault.local_pref.toString(),HeaderDefault.med.toString(),
+												   HeaderDefault.nexthop.toString(),HeaderDefault.mt_id.toString(),HeaderDefault.local_link_id.toString(),HeaderDefault.remote_link_id.toString(),HeaderDefault.intf_ip.toString(),
+												   HeaderDefault.nei_ip.toString(),HeaderDefault.igp_metric.toString(),HeaderDefault.admin_group.toString(),HeaderDefault.max_link_bw.toString(),HeaderDefault.max_resv_bw.toString(),
+												   HeaderDefault.unresv_bw.toString(),HeaderDefault.te_default_metric.toString(),HeaderDefault.link_protection.toString(),HeaderDefault.mpls_proto_mask.toString(),
+												   HeaderDefault.srlg.toString(),HeaderDefault.link_name.toString(),HeaderDefault.remote_node_hash.toString(),HeaderDefault.local_node_hash.toString()};;
 
         if (version.compareTo((float) 1.3) >= 0)  {
-            headerNames = new String[]{"action", "seq", "hash", "base_attr_hash", "router_hash", "router_ip", "peer_hash", "peer_ip",
-                    "peer_asn", "timestamp", "igp_router_id", "router_id", "routing_id", "ls_id",
-                    "ospf_area_id", "isis_area_id", "protocol", "as_path", "local_pref", "med", "nexthop",
-                    "mt_id", "local_link_id", "remote_link_id", "intf_ip", "nei_ip", "igp_metric",
-                    "admin_group", "max_link_bw", "max_resv_bw", "unresv_bw", "te_default_metric",
-                    "link_protection", "mpls_proto_mask", "srlg", "link_name", "remote_node_hash",
-                    "local_node_hash", "remote_igp_router_id", "remote_router_id", "local_node_asn",
-                    "remote_node_asn", "peer_node_sid", "isPrePolicy", "isAdjRibIn"};
-        }
-        else if (version.compareTo((float) 1.2) >= 0)  {
-            headerNames = new String[]{"action", "seq", "hash", "base_attr_hash", "router_hash", "router_ip", "peer_hash", "peer_ip",
-                    "peer_asn", "timestamp", "igp_router_id", "router_id", "routing_id", "ls_id",
-                    "ospf_area_id", "isis_area_id", "protocol", "as_path", "local_pref", "med", "nexthop",
-                    "mt_id", "local_link_id", "remote_link_id", "intf_ip", "nei_ip", "igp_metric",
-                    "admin_group", "max_link_bw", "max_resv_bw", "unresv_bw", "te_default_metric",
-                    "link_protection", "mpls_proto_mask", "srlg", "link_name", "remote_node_hash",
-                    "local_node_hash", "remote_igp_router_id", "remote_router_id", "local_node_asn",
-                    "remote_node_asn", "peer_node_sid"};
-        }
-        else {
-            headerNames = new String[]{"action", "seq", "hash", "base_attr_hash", "router_hash", "router_ip", "peer_hash", "peer_ip",
-                    "peer_asn", "timestamp", "igp_router_id", "router_id", "routing_id", "ls_id",
-                    "ospf_area_id", "isis_area_id", "protocol", "as_path", "local_pref", "med", "nexthop",
-                    "mt_id", "local_link_id", "remote_link_id", "intf_ip", "nei_ip", "igp_metric",
-                    "admin_group", "max_link_bw", "max_resv_bw", "unresv_bw", "te_default_metric",
-                    "link_protection", "mpls_proto_mask", "srlg", "link_name", "remote_node_hash",
-                    "local_node_hash"};
+        	
+        	// headers unique to version 1.3
+        	String versionSpecificHeaders [] = new String[]{HeaderDefault.remote_igp_router_id.toString(),HeaderDefault.remote_router_id.toString(),HeaderDefault.local_node_asn.toString(),HeaderDefault.remote_node_asn.toString(),
+            												HeaderDefault.peer_node_sid.toString(),HeaderDefault.isPrePolicy.toString(),HeaderDefault.isAdjRibIn.toString()};
+    		
+    		headerNames = new String[minimumHeaderNames.length + versionSpecificHeaders.length];
+    		System.arraycopy(minimumHeaderNames, 0, headerNames, 0, minimumHeaderNames.length);
+    		System.arraycopy(versionSpecificHeaders, 0, headerNames, minimumHeaderNames.length, versionSpecificHeaders.length);
+        	
+        	
+        }else if (version.compareTo((float) 1.2) >= 0)  {
+        	
+        	
+        	// headers unique to version 1.2
+        	String versionSpecificHeaders [] = new String[]{HeaderDefault.remote_igp_router_id.toString(),HeaderDefault.remote_router_id.toString(),HeaderDefault.local_node_asn.toString(),HeaderDefault.remote_node_asn.toString(),
+            												HeaderDefault.peer_node_sid.toString()};
+
+        	headerNames = new String[minimumHeaderNames.length+versionSpecificHeaders.length];
+			System.arraycopy(minimumHeaderNames, 0, headerNames, 0, minimumHeaderNames.length);
+			System.arraycopy(versionSpecificHeaders, 0, headerNames, minimumHeaderNames.length, versionSpecificHeaders.length);
+            
+        }else {
+        	
+            headerNames = minimumHeaderNames;
         }
 
         parse(version, data);

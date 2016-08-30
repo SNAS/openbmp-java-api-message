@@ -38,30 +38,36 @@ public class UnicastPrefix extends Base {
 
         spec_version = version;
 
+        // Minimum set of headers each Object will have.
+        String [] minimumHeaderNames = new String[]{HeaderDefault.action.toString(),HeaderDefault.seq.toString(),HeaderDefault.hash.toString(),HeaderDefault.router_hash.toString(),HeaderDefault.router_ip.toString(),
+        		HeaderDefault.base_attr_hash.toString(),HeaderDefault.peer_hash.toString(),HeaderDefault.peer_ip.toString(),HeaderDefault.peer_asn.toString(),HeaderDefault.timestamp.toString(),
+        		HeaderDefault.prefix.toString(),HeaderDefault.prefix_len.toString(),HeaderDefault.isIPv4.toString(),HeaderDefault.origin.toString(),HeaderDefault.as_path.toString(),
+        		HeaderDefault.as_path_count.toString(),HeaderDefault.origin_as.toString(),HeaderDefault.nexthop.toString(),HeaderDefault.med.toString(),HeaderDefault.local_pref.toString(),
+        		HeaderDefault.aggregator.toString(),HeaderDefault.community_list.toString(),HeaderDefault.ext_community_list.toString(),HeaderDefault.cluster_list.toString(),HeaderDefault.isAtomicAgg.toString(),
+        		HeaderDefault.isNexthopIPv4.toString(),HeaderDefault.originator_id.toString()};
+        
+        
         if (version.compareTo((float) 1.3) >= 0)  {
 
-            headerNames = new String[]{"action", "seq", "hash", "router_hash", "router_ip", "base_attr_hash", "peer_hash",
-                    "peer_ip", "peer_asn", "timestamp", "prefix", "prefix_len", "isIPv4",
-                    "origin", "as_path", "as_path_count", "origin_as",
-                    "nexthop", "med", "local_pref", "aggregator", "community_list", "ext_community_list",
-                    "cluster_list", "isAtomicAgg", "isNexthopIPv4", "originator_id",
-                    "path_id", "labels", "isPrePolicy", "isAdjRibIn"};
+        		//headers specific to v1.3 or greater
+        		String versionSpecificHeaders [] = new String[]{HeaderDefault.path_id.toString(),HeaderDefault.labels.toString(),HeaderDefault.isPrePolicy.toString(),HeaderDefault.isAdjRibIn.toString()};
+        		
+        		headerNames = new String[minimumHeaderNames.length+versionSpecificHeaders.length];
+        		System.arraycopy(minimumHeaderNames, 0, headerNames, 0, minimumHeaderNames.length);
+        		System.arraycopy(versionSpecificHeaders, 0, headerNames, minimumHeaderNames.length, versionSpecificHeaders.length);
 
         } else if (version.compareTo((float) 1.1) >= 0)  {
-
-                headerNames = new String[]{"action", "seq", "hash", "router_hash", "router_ip", "base_attr_hash", "peer_hash",
-                        "peer_ip", "peer_asn", "timestamp", "prefix", "prefix_len", "isIPv4",
-                        "origin", "as_path", "as_path_count", "origin_as",
-                        "nexthop", "med", "local_pref", "aggregator", "community_list", "ext_community_list",
-                        "cluster_list", "isAtomicAgg", "isNexthopIPv4", "originator_id",
-                        "path_id", "labels"};
+        		
+        		// headers specifoc to v1.1 or greater
+        		String versionSpecificHeaders [] = new String[]{HeaderDefault.path_id.toString(),HeaderDefault.labels.toString()};
+        		
+        		headerNames = new String[minimumHeaderNames.length+versionSpecificHeaders.length];
+        		System.arraycopy(minimumHeaderNames, 0, headerNames, 0, minimumHeaderNames.length);
+        		System.arraycopy(versionSpecificHeaders, 0, headerNames, minimumHeaderNames.length, versionSpecificHeaders.length);
 
         } else {
-            headerNames = new String[]{"action", "seq", "hash", "router_hash", "router_ip", "base_attr_hash", "peer_hash",
-                    "peer_ip", "peer_asn", "timestamp", "prefix", "prefix_len", "isIPv4",
-                    "origin", "as_path", "as_path_count", "origin_as",
-                    "nexthop", "med", "local_pref", "aggregator", "community_list", "ext_community_list",
-                    "cluster_list", "isAtomicAgg", "isNexthopIPv4", "originator_id"};
+        	
+            headerNames = minimumHeaderNames;
         }
 
         parse(version, data);

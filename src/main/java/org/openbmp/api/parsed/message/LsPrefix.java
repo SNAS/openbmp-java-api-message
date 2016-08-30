@@ -35,20 +35,27 @@ public class LsPrefix extends Base {
         super();
 
         spec_version = version;
+        
+        // Minimum set of headers each Object will have.
+        String [] minimumHeaderNames = new String[]{HeaderDefault.action.toString(),HeaderDefault.seq.toString(),HeaderDefault.hash.toString(),HeaderDefault.base_attr_hash.toString(),HeaderDefault.router_hash.toString(),
+									        		HeaderDefault.router_ip.toString(),HeaderDefault.peer_hash.toString(),HeaderDefault.peer_ip.toString(),HeaderDefault.peer_asn.toString(),HeaderDefault.timestamp.toString(),
+									        		HeaderDefault.igp_router_id.toString(),HeaderDefault.router_id.toString(),HeaderDefault.routing_id.toString(),HeaderDefault.ls_id.toString(),HeaderDefault.ospf_area_id.toString(),
+									        		HeaderDefault.isis_area_id.toString(),HeaderDefault.protocol.toString(),HeaderDefault.as_path.toString(),HeaderDefault.local_pref.toString(),HeaderDefault.med.toString(),
+									        		HeaderDefault.nexthop.toString(),HeaderDefault.local_node_hash.toString(),HeaderDefault.mt_id.toString(),HeaderDefault.ospf_route_type.toString(),HeaderDefault.igp_flags.toString(),
+									        		HeaderDefault.route_tag.toString(),HeaderDefault.ext_route_tag.toString(),HeaderDefault.ospf_fwd_addr.toString(),HeaderDefault.igp_metric.toString(),HeaderDefault.prefix.toString(),
+									        		HeaderDefault.prefix_len.toString()};
 
         if (version.compareTo((float) 1.3) >= 0)  {
-            headerNames = new String[]{ "action", "seq", "hash", "base_attr_hash", "router_hash", "router_ip", "peer_hash", "peer_ip",
-                                        "peer_asn", "timestamp", "igp_router_id", "router_id", "routing_id", "ls_id",
-                                        "ospf_area_id", "isis_area_id", "protocol", "as_path", "local_pref", "med", "nexthop",
-                                        "local_node_hash", "mt_id", "ospf_route_type", "igp_flags", "route_tag",
-                                        "ext_route_tag", "ospf_fwd_addr", "igp_metric", "prefix", "prefix_len",
-                                        "isPrePolicy", "isAdjRibIn"};
+        	
+        	//headers specific to v1.3
+        	String versionSpecificHeaders [] = new String[]{HeaderDefault.isPrePolicy.toString(),HeaderDefault.isAdjRibIn.toString()};
+    		
+    		headerNames = new String[minimumHeaderNames.length + versionSpecificHeaders.length];
+    		System.arraycopy(minimumHeaderNames, 0, headerNames, 0, minimumHeaderNames.length);
+    		System.arraycopy(versionSpecificHeaders, 0, headerNames, minimumHeaderNames.length, versionSpecificHeaders.length);
+            
         } else {
-            headerNames = new String[]{ "action", "seq", "hash", "base_attr_hash", "router_hash", "router_ip", "peer_hash", "peer_ip",
-                                        "peer_asn", "timestamp", "igp_router_id", "router_id", "routing_id", "ls_id",
-                                        "ospf_area_id", "isis_area_id", "protocol", "as_path", "local_pref", "med", "nexthop",
-                                        "local_node_hash", "mt_id", "ospf_route_type", "igp_flags", "route_tag",
-                                        "ext_route_tag", "ospf_fwd_addr", "igp_metric", "prefix", "prefix_len"};
+            headerNames = minimumHeaderNames;
         }
 
         parse(version, data);

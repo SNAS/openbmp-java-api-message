@@ -34,7 +34,8 @@ public class Collector extends Base {
      */
     public Collector(String data) {
         super();
-        headerNames = new String [] { "action", "seq", "admin_id", "hash", "routers", "router_count", "timestamp" };
+        headerNames = new String [] {HeaderDefault.action.toString(),HeaderDefault.seq.toString(),HeaderDefault.admin_id.toString(),HeaderDefault.hash.toString(),
+        							 HeaderDefault.routers.toString(),HeaderDefault.router_count.toString(),HeaderDefault.timestamp.toString() };
 
         // TODO: Change below to supply version when version is required
         parse(data);
