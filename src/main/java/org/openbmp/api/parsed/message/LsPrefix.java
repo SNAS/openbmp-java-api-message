@@ -7,6 +7,10 @@ package org.openbmp.api.parsed.message;
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  *
  */
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.openbmp.api.helpers.IpAddr;
 import org.openbmp.api.parsed.processor.ParseLongEmptyAsZero;
 import org.openbmp.api.parsed.processor.ParseNullAsEmpty;
@@ -23,6 +27,34 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  *
  */
 public class LsPrefix extends Base {
+	
+	String [] minimumHeaderNames = new String[]{MsgBusFields.ACTION.getName(),MsgBusFields.SEQUENCE.getName(),MsgBusFields.HASH.getName(),MsgBusFields.BASE_ATTR_HASH.getName(),MsgBusFields.ROUTER_HASH.getName(),
+									    		MsgBusFields.ROUTER_IP.getName(),MsgBusFields.PEER_HASH.getName(),MsgBusFields.PEER_IP.getName(),MsgBusFields.PEER_ASN.getName(),MsgBusFields.TIMESTAMP.getName(),
+									    		MsgBusFields.IGP_ROUTER_ID.getName(),MsgBusFields.ROUTER_ID.getName(),MsgBusFields.ROUTING_ID.getName(),MsgBusFields.LS_ID.getName(),MsgBusFields.OSPF_AREA_ID.getName(),
+									    		MsgBusFields.ISIS_AREA_ID.getName(),MsgBusFields.PROTOCOL.getName(),MsgBusFields.AS_PATH.getName(),MsgBusFields.LOCAL_PREF.getName(),MsgBusFields.MED.getName(),
+									    		MsgBusFields.NEXTHOP.getName(),MsgBusFields.LOCAL_NODE_HASH.getName(),MsgBusFields.MT_ID.getName(),MsgBusFields.OSPF_ROUTE_TYPE.getName(),MsgBusFields.IGP_FLAGS.getName(),
+									    		MsgBusFields.ROUTE_TAG.getName(),MsgBusFields.EXT_ROUTE_TAG.getName(),MsgBusFields.OSPF_FWD_ADDR.getName(),MsgBusFields.IGP_METRIC.getName(),MsgBusFields.PREFIX.getName(),
+									    		MsgBusFields.PREFIX_LEN.getName()};
+	
+	
+	/**
+	 * base constructor to support backward compatibility. Will run on the {@link Base.DEFAULT_SPEC_VERSION} version.
+	 * @param data
+	 */
+	public LsPrefix(String data) {
+		super();
+		
+		String latestVersionHeaders [] = new String[]{MsgBusFields.ISPREPOLICY.getName(),MsgBusFields.IS_ADJ_RIB_IN.getName()};
+		
+		List<String> headerList = new ArrayList<>();
+		headerList.addAll(Arrays.asList(minimumHeaderNames));
+		headerList.addAll(Arrays.asList(latestVersionHeaders));
+		
+		headerNames = (String[]) headerList.toArray();
+		parse(data);
+		
+		
+	}
 
     /**
      * Handle the message by parsing it and storing the data in memory.
@@ -36,24 +68,16 @@ public class LsPrefix extends Base {
 
         spec_version = version;
         
-        // Minimum set of headers each Object will have.
-        String [] minimumHeaderNames = new String[]{HeaderDefault.action.toString(),HeaderDefault.seq.toString(),HeaderDefault.hash.toString(),HeaderDefault.base_attr_hash.toString(),HeaderDefault.router_hash.toString(),
-									        		HeaderDefault.router_ip.toString(),HeaderDefault.peer_hash.toString(),HeaderDefault.peer_ip.toString(),HeaderDefault.peer_asn.toString(),HeaderDefault.timestamp.toString(),
-									        		HeaderDefault.igp_router_id.toString(),HeaderDefault.router_id.toString(),HeaderDefault.routing_id.toString(),HeaderDefault.ls_id.toString(),HeaderDefault.ospf_area_id.toString(),
-									        		HeaderDefault.isis_area_id.toString(),HeaderDefault.protocol.toString(),HeaderDefault.as_path.toString(),HeaderDefault.local_pref.toString(),HeaderDefault.med.toString(),
-									        		HeaderDefault.nexthop.toString(),HeaderDefault.local_node_hash.toString(),HeaderDefault.mt_id.toString(),HeaderDefault.ospf_route_type.toString(),HeaderDefault.igp_flags.toString(),
-									        		HeaderDefault.route_tag.toString(),HeaderDefault.ext_route_tag.toString(),HeaderDefault.ospf_fwd_addr.toString(),HeaderDefault.igp_metric.toString(),HeaderDefault.prefix.toString(),
-									        		HeaderDefault.prefix_len.toString()};
-
         if (version.compareTo((float) 1.3) >= 0)  {
         	
-        	//headers specific to v1.3
-        	String versionSpecificHeaders [] = new String[]{HeaderDefault.isPrePolicy.toString(),HeaderDefault.isAdjRibIn.toString()};
+        	String versionSpecificHeaders [] = new String[]{MsgBusFields.ISPREPOLICY.getName(),MsgBusFields.IS_ADJ_RIB_IN.getName()};
     		
-    		headerNames = new String[minimumHeaderNames.length + versionSpecificHeaders.length];
-    		System.arraycopy(minimumHeaderNames, 0, headerNames, 0, minimumHeaderNames.length);
-    		System.arraycopy(versionSpecificHeaders, 0, headerNames, minimumHeaderNames.length, versionSpecificHeaders.length);
-            
+    		List<String> headerList = new ArrayList<>();
+    		headerList.addAll(Arrays.asList(minimumHeaderNames));
+    		headerList.addAll(Arrays.asList(versionSpecificHeaders));
+    		
+    		headerNames = (String[]) headerList.toArray();
+
         } else {
             headerNames = minimumHeaderNames;
         }
@@ -71,77 +95,57 @@ public class LsPrefix extends Base {
     protected CellProcessor[] getProcessors() {
         final CellProcessor[] processors;
 
+        final CellProcessor[] defaultCellProcessors = new CellProcessor[]{
+        		new NotNull(),                  // action
+                new ParseLong(),                // seq
+                new NotNull(),                  // hash
+                new NotNull(),                  // base_hash
+                new NotNull(),                  // router_hash
+                new NotNull(),                  // router_ip
+                new NotNull(),                  // peer_hash
+                new NotNull(),                  // peer_ip
+                new ParseLong(),                // peer_asn
+                new ParseTimestamp(),           // timestamp
+                new ParseNullAsEmpty(),         // igp_router_id
+                new ParseNullAsEmpty(),         // router_id
+                new ParseNullAsEmpty(),         // routing_id
+                new ParseLongEmptyAsZero(),     // ls_id
+                new ParseNullAsEmpty(),         // ospf_area_id
+                new ParseNullAsEmpty(),         // isis_area_id
+                new ParseNullAsEmpty(),         // protocol
+                new ParseNullAsEmpty(),         // as_path
+                new ParseLongEmptyAsZero(),     // local_pref
+                new ParseLongEmptyAsZero(),     // med
+                new ParseNullAsEmpty(),         // nexthop
+                new ParseNullAsEmpty(),         // local_node_hash
+                new ParseNullAsEmpty(),         // mt_id
+                new ParseNullAsEmpty(),         // ospf_route_type
+                new ParseNullAsEmpty(),         // igp_flags
+                new ParseLongEmptyAsZero(),     // route_tag
+                new ParseLongEmptyAsZero(),     // ext_route_tag
+                new ParseNullAsEmpty(),         // ospf_fwd_addr
+                new ParseLongEmptyAsZero(),     // igp_metric
+                new NotNull(),                  // prefix
+                new ParseInt()                  // prefix_len
+        };
+        
         if (spec_version.compareTo((float) 1.3) >= 0) {
-            processors = new CellProcessor[] {
-                    new NotNull(),                  // action
-                    new ParseLong(),                // seq
-                    new NotNull(),                  // hash
-                    new NotNull(),                  // base_hash
-                    new NotNull(),                  // router_hash
-                    new NotNull(),                  // router_ip
-                    new NotNull(),                  // peer_hash
-                    new NotNull(),                  // peer_ip
-                    new ParseLong(),                // peer_asn
-                    new ParseTimestamp(),           // timestamp
-                    new ParseNullAsEmpty(),         // igp_router_id
-                    new ParseNullAsEmpty(),         // router_id
-                    new ParseNullAsEmpty(),         // routing_id
-                    new ParseLongEmptyAsZero(),     // ls_id
-                    new ParseNullAsEmpty(),         // ospf_area_id
-                    new ParseNullAsEmpty(),         // isis_area_id
-                    new ParseNullAsEmpty(),         // protocol
-                    new ParseNullAsEmpty(),         // as_path
-                    new ParseLongEmptyAsZero(),     // local_pref
-                    new ParseLongEmptyAsZero(),     // med
-                    new ParseNullAsEmpty(),         // nexthop
-                    new ParseNullAsEmpty(),         // local_node_hash
-                    new ParseNullAsEmpty(),         // mt_id
-                    new ParseNullAsEmpty(),         // ospf_route_type
-                    new ParseNullAsEmpty(),         // igp_flags
-                    new ParseLongEmptyAsZero(),     // route_tag
-                    new ParseLongEmptyAsZero(),     // ext_route_tag
-                    new ParseNullAsEmpty(),         // ospf_fwd_addr
-                    new ParseLongEmptyAsZero(),     // igp_metric
-                    new NotNull(),                  // prefix
-                    new ParseInt(),                 // prefix_len
-                    new ParseLongEmptyAsZero(),     // isPrePolicy
+        	
+        	CellProcessor[] versionSpecificProcessors = new CellProcessor[]{
+        			new ParseLongEmptyAsZero(),     // isPrePolicy
                     new ParseLongEmptyAsZero()      // isAdjRibIn
-            };
+        	};
+            
+        	List<CellProcessor> processorsList = new ArrayList<>();
+        	processorsList.addAll(Arrays.asList(defaultCellProcessors));
+        	processorsList.addAll(Arrays.asList(versionSpecificProcessors));
+        	
+        	processors = (CellProcessor[])processorsList.toArray();
+        	
+           
         }
         else {
-            processors = new CellProcessor[] {
-                    new NotNull(),                  // action
-                    new ParseLong(),                // seq
-                    new NotNull(),                  // hash
-                    new NotNull(),                  // base_hash
-                    new NotNull(),                  // router_hash
-                    new NotNull(),                  // router_ip
-                    new NotNull(),                  // peer_hash
-                    new NotNull(),                  // peer_ip
-                    new ParseLong(),                // peer_asn
-                    new ParseTimestamp(),           // timestamp
-                    new ParseNullAsEmpty(),         // igp_router_id
-                    new ParseNullAsEmpty(),         // router_id
-                    new ParseNullAsEmpty(),         // routing_id
-                    new ParseLongEmptyAsZero(),     // ls_id
-                    new ParseNullAsEmpty(),         // ospf_area_id
-                    new ParseNullAsEmpty(),         // isis_area_id
-                    new ParseNullAsEmpty(),         // protocol
-                    new ParseNullAsEmpty(),         // as_path
-                    new ParseLongEmptyAsZero(),     // local_pref
-                    new ParseLongEmptyAsZero(),     // med
-                    new ParseNullAsEmpty(),         // nexthop
-                    new ParseNullAsEmpty(),         // local_node_hash
-                    new ParseNullAsEmpty(),         // mt_id
-                    new ParseNullAsEmpty(),         // ospf_route_type
-                    new ParseNullAsEmpty(),         // igp_flags
-                    new ParseLongEmptyAsZero(),     // route_tag
-                    new ParseLongEmptyAsZero(),     // ext_route_tag
-                    new ParseNullAsEmpty(),         // ospf_fwd_addr
-                    new ParseLongEmptyAsZero(),     // igp_metric
-                    new NotNull(),                  // prefix
-                    new ParseInt()                  // prefix_len
-            };
+            processors = defaultCellProcessors;
         }
 
         return processors;

@@ -23,24 +23,47 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  */
 public class BaseAttribute extends Base {
 
+	    // Minimum set of headers each Object will have.
+		String [] minimumHeaderNames =new String[]{MsgBusFields.ACTION.getName(),MsgBusFields.SEQUENCE.getName(),MsgBusFields.HASH.getName(),MsgBusFields.ROUTER_HASH.getName(),
+												  MsgBusFields.ROUTER_IP.getName(),MsgBusFields.PEER_HASH.getName(),MsgBusFields.PEER_IP.getName(),MsgBusFields.PEER_ASN.getName(),
+												  MsgBusFields.TIMESTAMP.getName(),MsgBusFields.ORIGIN.getName(),MsgBusFields.AS_PATH.getName(),MsgBusFields.AS_PATH_COUNT.getName(),
+												  MsgBusFields.ORIGIN_AS.getName(),MsgBusFields.NEXTHOP.getName(),MsgBusFields.MED.getName(),MsgBusFields.LOCAL_PREF.getName(),
+												  MsgBusFields.AGGREGATOR.getName(),MsgBusFields.COMMUNITY_LIST.getName(),MsgBusFields.EXT_COMMUNITY_LIST.getName(),
+												  MsgBusFields.CLUSTER_LIST.getName(),MsgBusFields.ISATOMICAGG.getName(),MsgBusFields.IS_NEXTHOP_IPV4.getName(),MsgBusFields.ORIGINATOR_ID.getName()};
+	
+	
+   
+	/**
+	 * base constructor to support backward compatibility. Will run on the {@link Base.DEFAULT_SPEC_VERSION} version.
+	 * @param data
+	 */
+    public BaseAttribute(String data) {
+        super();
+        
+        headerNames = minimumHeaderNames;
+
+        parse(data);
+    }
+    
+    
     /**
      * Handle the message by parsing it and storing the data in memory.
      *
      * @param data
      */
-    public BaseAttribute(String data) {
+    public BaseAttribute(Float version, String data) {
         super();
         
+        spec_version = version;
        
-        headerNames = new String [] { HeaderDefault.action.toString(),HeaderDefault.seq.toString(),HeaderDefault.hash.toString(),HeaderDefault.router_hash.toString(),
-        								HeaderDefault.router_ip.toString(),HeaderDefault.peer_hash.toString(),HeaderDefault.peer_ip.toString(),HeaderDefault.peer_asn.toString(),
-        								HeaderDefault.timestamp.toString(),HeaderDefault.origin.toString(),HeaderDefault.as_path.toString(),HeaderDefault.as_path_count.toString(),
-        								HeaderDefault.origin_as.toString(),HeaderDefault.nexthop.toString(),HeaderDefault.med.toString(),HeaderDefault.local_pref.toString(),
-        								HeaderDefault.aggregator.toString(),HeaderDefault.community_list.toString(),HeaderDefault.ext_community_list.toString(),
-        								HeaderDefault.cluster_list.toString(),HeaderDefault.isAtomicAgg.toString(),HeaderDefault.isNexthopIPv4.toString(),HeaderDefault.originator_id.toString() };
+        //Headers are same upto version 1.2 for this Object. 
+        //TODO:: If needed, add additional headers with later version. Refer to {@link LsLink} constructor.
+        headerNames = minimumHeaderNames;
 
-        parse(data);
+        parse(version, data);
     }
+    
+    
 
     /**
      * Processors used for each field.

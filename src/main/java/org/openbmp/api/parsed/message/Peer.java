@@ -23,26 +23,47 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  */
 public class Peer extends Base {
 
-    /**
-     * Handle the message by parsing it and storing the data in memory.
-     *
-     * @param data
-     */
-    public Peer(String data) {
+	
+	String [] minimumHeaderNames =new String[]{ MsgBusFields.ACTION.getName(),MsgBusFields.SEQUENCE.getName(),MsgBusFields.HASH.getName(),MsgBusFields.ROUTER_HASH.getName(),MsgBusFields.NAME.getName(),
+									    		MsgBusFields.REMOTE_BGP_ID.getName(),MsgBusFields.ROUTER_IP.getName(),MsgBusFields.TIMESTAMP.getName(),MsgBusFields.REMOTE_ASN.getName(),
+									    		MsgBusFields.REMOTE_IP.getName(),MsgBusFields.PEER_RD.getName(),MsgBusFields.REMOTE_PORT.getName(),MsgBusFields.LOCAL_ASN.getName(),
+									    		MsgBusFields.LOCAL_IP.getName(),MsgBusFields.LOCAL_PORT.getName(),MsgBusFields.LOCAL_BGP_ID.getName(),MsgBusFields.INFO_DATA.getName(),MsgBusFields.ADV_CAP.getName(),
+									    		MsgBusFields.RECV_CAP.getName(),MsgBusFields.REMOTE_HOLDDOWN.getName(),MsgBusFields.ADV_HOLDDOWN.getName(),MsgBusFields.BMP_REASON.getName(),
+									    		MsgBusFields.BGP_ERROR_CODE.getName(),MsgBusFields.BGP_ERROR_SUB_CODE.getName(),MsgBusFields.ERROR_TEXT.getName(),MsgBusFields.IS_L3VPN.getName(),
+									    		MsgBusFields.ISPREPOLICY.getName(),MsgBusFields.IS_IPV4.getName()};
+	
+  
+	/**
+	 * base constructor to support backward compatibility. Will run on the {@link Base.DEFAULT_SPEC_VERSION} version.
+	 * @param data
+	 */
+	public Peer(String data) {
         super();
         
-        headerNames = new String [] { HeaderDefault.action.toString(),HeaderDefault.seq.toString(),HeaderDefault.hash.toString(),HeaderDefault.router_hash.toString(),HeaderDefault.name.toString(),
-					        		HeaderDefault.remote_bgp_id.toString(),HeaderDefault.router_ip.toString(),HeaderDefault.timestamp.toString(),HeaderDefault.remote_asn.toString(),
-					        		HeaderDefault.remote_ip.toString(),HeaderDefault.peer_rd.toString(),HeaderDefault.remote_port.toString(),HeaderDefault.local_asn.toString(),
-					        		HeaderDefault.local_ip.toString(),HeaderDefault.local_port.toString(),HeaderDefault.local_bgp_id.toString(),HeaderDefault.info_data.toString(),HeaderDefault.adv_cap.toString(),
-					        		HeaderDefault.recv_cap.toString(),HeaderDefault.remote_holddown.toString(),HeaderDefault.adv_holddown.toString(),HeaderDefault.bmp_reason.toString(),
-					        		HeaderDefault.bgp_error_code.toString(),HeaderDefault.bgp_error_sub_code.toString(),HeaderDefault.error_text.toString(),HeaderDefault.isL3VPN.toString(),
-					        		HeaderDefault.isPrePolicy.toString(),HeaderDefault.isIPv4.toString()};
+        headerNames = minimumHeaderNames;
 
-        // TODO: Change below to supply version when version is required
         parse(data);
     }
 
+	  /**
+     * Handle the message by parsing it and storing the data in memory.
+     *
+     * @param data
+     */ 
+    public Peer(Float version, String data) {
+        super();
+        
+        spec_version = version;
+        
+        //Headers are same upto version 1.3 for this Object. 
+        //TODO:: If needed, add additional headers with later version. Refer to {@link LsLink} constructor.
+        headerNames = minimumHeaderNames;
+        
+        
+        parse(version, data);
+    }
+    
+    
     /**
      * Processors used for each field.
      *
