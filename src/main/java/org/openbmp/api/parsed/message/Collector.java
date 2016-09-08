@@ -26,20 +26,45 @@ import java.util.TimerTask;
 public class Collector extends Base {
 
     private static Map<String,TimerTask> heartbeatListeners;
+    
+    // Minimum set of headers each version will have for this Object.
+ 	String [] minimumHeaderNames =new String[]{MsgBusFields.ACTION.getName(),MsgBusFields.SEQUENCE.getName(),MsgBusFields.ADMIN_ID.getName(),MsgBusFields.HASH.getName(),
+			 								   MsgBusFields.ROUTERS.getName(),MsgBusFields.ROUTER_COUNT.getName(),MsgBusFields.TIMESTAMP.getName()};
 
-    /**
-     * Handle the message by parsing it and storing the data in memory.
-     *
-     * @param data
-     */
+   
+ 	/**
+	 * base constructor to support backward compatibility. Will run on the {@link Base.DEFAULT_SPEC_VERSION} version.
+	 * @param data
+	 */
     public Collector(String data) {
         super();
-        headerNames = new String [] { "action", "seq", "admin_id", "hash", "routers", "router_count", "timestamp" };
+        
+        headerNames = minimumHeaderNames;
 
         // TODO: Change below to supply version when version is required
         parse(data);
     }
 
+    
+    /**
+     * Handle the message by parsing it and storing the data in memory.
+     *
+     * @param data
+     */
+    public Collector(Float version, String data) {
+        super();
+        
+        spec_version = version;
+        
+        //Headers are same upto version 1.2 for this Object. 
+        //TODO:: If needed, add additional headers with later version. Refer to {@link LsLink} constructor.
+        headerNames = minimumHeaderNames;
+        
+        
+        parse(version, data);
+    }
+    
+    
     /**
      * Processors used for each field.
      *

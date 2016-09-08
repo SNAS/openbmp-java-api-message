@@ -17,6 +17,8 @@ import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Format class for unicast_prefix parsed messages (openbmp.parsed.unicast_prefix)
@@ -26,6 +28,34 @@ import java.util.ArrayList;
  */
 public class UnicastPrefix extends Base {
 
+	// Minimum set of headers each Object will have.
+	String [] minimumHeaderNames = new String[]{MsgBusFields.ACTION.getName(),MsgBusFields.SEQUENCE.getName(),MsgBusFields.HASH.getName(),MsgBusFields.ROUTER_HASH.getName(),MsgBusFields.ROUTER_IP.getName(),
+									    		MsgBusFields.BASE_ATTR_HASH.getName(),MsgBusFields.PEER_HASH.getName(),MsgBusFields.PEER_IP.getName(),MsgBusFields.PEER_ASN.getName(),MsgBusFields.TIMESTAMP.getName(),
+									    		MsgBusFields.PREFIX.getName(),MsgBusFields.PREFIX_LEN.getName(),MsgBusFields.IS_IPV4.getName(),MsgBusFields.ORIGIN.getName(),MsgBusFields.AS_PATH.getName(),
+									    		MsgBusFields.AS_PATH_COUNT.getName(),MsgBusFields.ORIGIN_AS.getName(),MsgBusFields.NEXTHOP.getName(),MsgBusFields.MED.getName(),MsgBusFields.LOCAL_PREF.getName(),
+									    		MsgBusFields.AGGREGATOR.getName(),MsgBusFields.COMMUNITY_LIST.getName(),MsgBusFields.EXT_COMMUNITY_LIST.getName(),MsgBusFields.CLUSTER_LIST.getName(),MsgBusFields.ISATOMICAGG.getName(),
+									    		MsgBusFields.IS_NEXTHOP_IPV4.getName(),MsgBusFields.ORIGINATOR_ID.getName()};
+	
+	
+	/**
+	 * base constructor to support backward compatibility. Will run on the {@link Base.DEFAULT_SPEC_VERSION} version.
+	 * @param data
+	 */
+	public UnicastPrefix(String data) {
+		super();
+		
+		String latestVersionHeaders [] =  new String[]{MsgBusFields.PATH_ID.getName(),MsgBusFields.LABELS.getName(),MsgBusFields.ISPREPOLICY.getName(),MsgBusFields.IS_ADJ_RIB_IN.getName()};
+
+		List<String> headerList = new ArrayList();
+		headerList.addAll(Arrays.asList(minimumHeaderNames));
+		headerList.addAll(Arrays.asList(latestVersionHeaders));
+
+		headerNames = headerList.toArray(new String[headerList.size()]);
+		
+		parse(data);
+	}
+	
+	
     /**
      * Handle the message by parsing it and storing the data in memory.
      *
@@ -37,31 +67,34 @@ public class UnicastPrefix extends Base {
         super();
 
         spec_version = version;
-
+        
         if (version.compareTo((float) 1.3) >= 0)  {
 
-            headerNames = new String[]{"action", "seq", "hash", "router_hash", "router_ip", "base_attr_hash", "peer_hash",
-                    "peer_ip", "peer_asn", "timestamp", "prefix", "prefix_len", "isIPv4",
-                    "origin", "as_path", "as_path_count", "origin_as",
-                    "nexthop", "med", "local_pref", "aggregator", "community_list", "ext_community_list",
-                    "cluster_list", "isAtomicAgg", "isNexthopIPv4", "originator_id",
-                    "path_id", "labels", "isPrePolicy", "isAdjRibIn"};
-
+        		//headers specific to v1.3 or greater
+        		String versionSpecificHeaders [] = new String[]{MsgBusFields.PATH_ID.getName(),MsgBusFields.LABELS.getName(),MsgBusFields.ISPREPOLICY.getName(),MsgBusFields.IS_ADJ_RIB_IN.getName()};
+        		
+        		List<String> headerList = new ArrayList();
+        		headerList.addAll(Arrays.asList(minimumHeaderNames));
+        		headerList.addAll(Arrays.asList(versionSpecificHeaders));
+        		
+        		headerNames = headerList.toArray(new String[headerList.size()]);
+        		
+        		
         } else if (version.compareTo((float) 1.1) >= 0)  {
-
-                headerNames = new String[]{"action", "seq", "hash", "router_hash", "router_ip", "base_attr_hash", "peer_hash",
-                        "peer_ip", "peer_asn", "timestamp", "prefix", "prefix_len", "isIPv4",
-                        "origin", "as_path", "as_path_count", "origin_as",
-                        "nexthop", "med", "local_pref", "aggregator", "community_list", "ext_community_list",
-                        "cluster_list", "isAtomicAgg", "isNexthopIPv4", "originator_id",
-                        "path_id", "labels"};
+        		
+        		// headers specific to v1.1 or greater
+        		String versionSpecificHeaders [] = new String[]{MsgBusFields.PATH_ID.getName(),MsgBusFields.LABELS.getName()};
+        		
+        		List<String> headerList = new ArrayList();
+        		headerList.addAll(Arrays.asList(minimumHeaderNames));
+        		headerList.addAll(Arrays.asList(versionSpecificHeaders));
+        		
+        		headerNames = headerList.toArray(new String[headerList.size()]);
 
         } else {
-            headerNames = new String[]{"action", "seq", "hash", "router_hash", "router_ip", "base_attr_hash", "peer_hash",
-                    "peer_ip", "peer_asn", "timestamp", "prefix", "prefix_len", "isIPv4",
-                    "origin", "as_path", "as_path_count", "origin_as",
-                    "nexthop", "med", "local_pref", "aggregator", "community_list", "ext_community_list",
-                    "cluster_list", "isAtomicAgg", "isNexthopIPv4", "originator_id"};
+    		
+        		headerNames = minimumHeaderNames;
+            
         }
 
         parse(version, data);
@@ -77,106 +110,70 @@ public class UnicastPrefix extends Base {
     protected CellProcessor[] getProcessors() {
 
         CellProcessor[] processors;
+        
+        final CellProcessor[] defaultCellProcessors = new CellProcessor[]{
+        		new NotNull(),                      // action
+                new ParseLong(),                    // seq
+                new NotNull(),                      // hash
+                new NotNull(),                      // router hash
+                new NotNull(),                      // router_ip
+                new ParseNullAsEmpty(),             // base_attr_hash
+                new NotNull(),                      // peer_hash
+                new NotNull(),                      // peer_ip
+                new ParseLong(),                    // peer_asn
+                new ParseTimestamp(),               // timestamp
+                new NotNull(),                      // prefix
+                new ParseInt(),                     // prefix_len
+                new ParseInt(),                     // isIPv4
+                new ParseNullAsEmpty(),             // origin
+                new ParseNullAsEmpty(),             // as_path
+                new ParseLongEmptyAsZero(),         // as_path_count
+                new ParseLongEmptyAsZero(),         // origin_as
+                new ParseNullAsEmpty(),             // nexthop
+                new ParseLongEmptyAsZero(),         // med
+                new ParseLongEmptyAsZero(),         // local_pref
+                new ParseNullAsEmpty(),             // aggregator
+                new ParseNullAsEmpty(),             // community_list
+                new ParseNullAsEmpty(),             // ext_community_list
+                new ParseNullAsEmpty(),             // cluster_list
+                new ParseLongEmptyAsZero(),         // isAtomicAgg
+                new ParseLongEmptyAsZero(),         // isNexthopIPv4
+                new ParseNullAsEmpty()              // originator_id
+        		
+        };
 
         if (spec_version.compareTo((float) 1.3) >= 0) {
-            processors = new CellProcessor[] {
-                    new NotNull(),                      // action
-                    new ParseLong(),                    // seq
-                    new NotNull(),                      // hash
-                    new NotNull(),                      // router hash
-                    new NotNull(),                      // router_ip
-                    new ParseNullAsEmpty(),             // base_attr_hash
-                    new NotNull(),                      // peer_hash
-                    new NotNull(),                      // peer_ip
-                    new ParseLong(),                    // peer_asn
-                    new ParseTimestamp(),               // timestamp
-                    new NotNull(),                      // prefix
-                    new ParseInt(),                     // prefix_len
-                    new ParseInt(),                     // isIPv4
-                    new ParseNullAsEmpty(),             // origin
-                    new ParseNullAsEmpty(),             // as_path
-                    new ParseLongEmptyAsZero(),         // as_path_count
-                    new ParseLongEmptyAsZero(),         // origin_as
-                    new ParseNullAsEmpty(),             // nexthop
-                    new ParseLongEmptyAsZero(),         // med
-                    new ParseLongEmptyAsZero(),         // local_pref
-                    new ParseNullAsEmpty(),             // aggregator
-                    new ParseNullAsEmpty(),             // community_list
-                    new ParseNullAsEmpty(),             // ext_community_list
-                    new ParseNullAsEmpty(),             // cluster_list
-                    new ParseLongEmptyAsZero(),         // isAtomicAgg
-                    new ParseLongEmptyAsZero(),         // isNexthopIPv4
-                    new ParseNullAsEmpty(),             // originator_id
-                    new ParseLongEmptyAsZero(),         // Path ID
+        	
+        	CellProcessor[] versionSpecificProcessors = new CellProcessor[]{
+        			new ParseLongEmptyAsZero(),         // Path ID
                     new ParseNullAsEmpty(),             // Labels
                     new ParseLongEmptyAsZero(),         // isPrePolicy
                     new ParseLongEmptyAsZero()          // isAdjRibIn
-            };
+        	};
+        	
+        	List<CellProcessor> processorsList = new ArrayList();
+        	processorsList.addAll(Arrays.asList(defaultCellProcessors));
+        	processorsList.addAll(Arrays.asList(versionSpecificProcessors));
+        	
+        	processors = processorsList.toArray(new CellProcessor[processorsList.size()]);
         }
 
         else if (spec_version.compareTo((float) 1.1) >= 0) {
-            processors = new CellProcessor[] {
-                    new NotNull(),                      // action
-                    new ParseLong(),                    // seq
-                    new NotNull(),                      // hash
-                    new NotNull(),                      // router hash
-                    new NotNull(),                      // router_ip
-                    new ParseNullAsEmpty(),             // base_attr_hash
-                    new NotNull(),                      // peer_hash
-                    new NotNull(),                      // peer_ip
-                    new ParseLong(),                    // peer_asn
-                    new ParseTimestamp(),               // timestamp
-                    new NotNull(),                      // prefix
-                    new ParseInt(),                     // prefix_len
-                    new ParseInt(),                     // isIPv4
-                    new ParseNullAsEmpty(),             // origin
-                    new ParseNullAsEmpty(),             // as_path
-                    new ParseLongEmptyAsZero(),         // as_path_count
-                    new ParseLongEmptyAsZero(),         // origin_as
-                    new ParseNullAsEmpty(),             // nexthop
-                    new ParseLongEmptyAsZero(),         // med
-                    new ParseLongEmptyAsZero(),         // local_pref
-                    new ParseNullAsEmpty(),             // aggregator
-                    new ParseNullAsEmpty(),             // community_list
-                    new ParseNullAsEmpty(),             // ext_community_list
-                    new ParseNullAsEmpty(),             // cluster_list
-                    new ParseLongEmptyAsZero(),         // isAtomicAgg
-                    new ParseLongEmptyAsZero(),         // isNexthopIPv4
-                    new ParseNullAsEmpty(),             // originator_id
-                    new ParseLongEmptyAsZero(),         // Path ID
+        	
+        	CellProcessor[] versionSpecificProcessors = new CellProcessor[]{
+        			new ParseLongEmptyAsZero(),         // Path ID
                     new ParseNullAsEmpty()              // Labels
-            };
+        	};
+        	
+        	List<CellProcessor> processorsList = new ArrayList();
+        	processorsList.addAll(Arrays.asList(defaultCellProcessors));
+        	processorsList.addAll(Arrays.asList(versionSpecificProcessors));
+        	
+        	processors = processorsList.toArray(new CellProcessor[processorsList.size()]);
+        	
         }
         else {
-            processors = new CellProcessor[] {
-                    new NotNull(),                      // action
-                    new ParseLong(),                    // seq
-                    new NotNull(),                      // hash
-                    new NotNull(),                      // router hash
-                    new NotNull(),                      // router_ip
-                    new ParseNullAsEmpty(),             // base_attr_hash
-                    new NotNull(),                      // peer_hash
-                    new NotNull(),                      // peer_ip
-                    new ParseLong(),                    // peer_asn
-                    new ParseTimestamp(),               // timestamp
-                    new NotNull(),                      // prefix
-                    new ParseInt(),                     // prefix_len
-                    new ParseInt(),                     // isIPv4
-                    new ParseNullAsEmpty(),             // origin
-                    new ParseNullAsEmpty(),             // as_path
-                    new ParseLongEmptyAsZero(),         // as_path_count
-                    new ParseLongEmptyAsZero(),         // origin_as
-                    new ParseNullAsEmpty(),             // nexthop
-                    new ParseLongEmptyAsZero(),         // med
-                    new ParseLongEmptyAsZero(),         // local_pref
-                    new ParseNullAsEmpty(),             // aggregator
-                    new ParseNullAsEmpty(),             // community_list
-                    new ParseNullAsEmpty(),             // ext_community_list
-                    new ParseNullAsEmpty(),             // cluster_list
-                    new ParseLongEmptyAsZero(),         // isAtomicAgg
-                    new ParseLongEmptyAsZero(),         // isNexthopIPv4
-                    new ParseNullAsEmpty()              // originator_id
-            };
+            processors = defaultCellProcessors;
         }
 
         return processors;

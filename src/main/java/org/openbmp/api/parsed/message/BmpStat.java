@@ -20,22 +20,44 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  *
  */
 public class BmpStat extends Base {
+	
+	String [] minimumHeaderNames = new String[]{MsgBusFields.ACTION.getName(),MsgBusFields.SEQUENCE.getName(),MsgBusFields.ROUTER_HASH.getName(),MsgBusFields.ROUTER_IP.getName(),
+									    		MsgBusFields.PEER_HASH.getName(),MsgBusFields.PEER_IP.getName(),MsgBusFields.PEER_ASN.getName(),MsgBusFields.TIMESTAMP.getName(),MsgBusFields.REJECTED.getName(),
+									    		MsgBusFields.KNOWN_DUP_UPDATES.getName(),MsgBusFields.KNOWN_DUP_WITHDRAWS.getName(),MsgBusFields.INVALID_CLUSTER_LIST.getName(),
+									    		MsgBusFields.INVALID_AS_PATH.getName(),MsgBusFields.INVALID_ORIGINATOR.getName(),MsgBusFields.INVALID_AS_CONFED.getName(),MsgBusFields.PRE_POLICY.getName(),
+									    		MsgBusFields.POST_POLICY.getName()};
+
+   
+	/**
+	 * base constructor to support backward compatibility. Will run on the {@link Base.DEFAULT_SPEC_VERSION} version.
+	 * @param data
+	 */
+    public BmpStat(String data) {
+        super();
+        
+        headerNames = minimumHeaderNames;
+
+        parse(data);
+    }
 
     /**
      * Handle the message by parsing it and storing the data in memory.
      *
      * @param data
      */
-    public BmpStat(String data) {
+    public BmpStat(Float version, String data) {
         super();
-        headerNames = new String [] { "action", "seq", "router_hash", "router_ip", "peer_hash", "peer_ip",
-                                      "peer_asn", "timestamp", "rejected", "known_dup_updates", "known_dup_withdraws",
-                                      "invalid_cluster_list", "invalid_as_path", "invalid_originator",
-                                      "invalid_as_confed", "pre_policy", "post_policy"};
+        
+        spec_version = version;
+        
+        //Headers are same upto version 1.2 for this Object. 
+        //TODO:: If needed, add additional headers with later version. Refer to {@link LsLink} constructor.
+        headerNames = minimumHeaderNames;
 
-        parse(data);
+        parse(version, data);
     }
-
+    
+    
     /**
      * Processors used for each field.
      *

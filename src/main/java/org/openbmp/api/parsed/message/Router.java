@@ -7,6 +7,7 @@ package org.openbmp.api.parsed.message;
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  *
  */
+import org.openbmp.api.parsed.processor.ParseLongEmptyAsZero;
 import org.openbmp.api.parsed.processor.ParseNullAsEmpty;
 import org.openbmp.api.parsed.processor.ParseTimestamp;
 import org.supercsv.cellprocessor.Optional;
@@ -16,6 +17,7 @@ import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,6 +30,25 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Router extends Base {
 
+	// Minimum set of headers each Object will have.
+	String [] minimumHeaderNames =   new String[]{MsgBusFields.ACTION.getName(),MsgBusFields.SEQUENCE.getName(),MsgBusFields.NAME.getName(),MsgBusFields.HASH.getName(),MsgBusFields.IP_ADDRESS.getName(),
+										    	  MsgBusFields.DESCRIPTION.getName(),MsgBusFields.TERM_CODE.getName(),MsgBusFields.TERM_REASON.getName(),MsgBusFields.INIT_DATA.getName(),MsgBusFields.TERM_DATA.getName(),
+										    	  MsgBusFields.TIMESTAMP.getName()};
+	
+	/**
+	 * base constructor to support backward compatibility. Will run on the {@link Base.DEFAULT_SPEC_VERSION} version.
+	 * @param data
+	 */
+	public Router(String data) {
+        super();
+        
+        headerNames = minimumHeaderNames;
+        
+        parse(data);
+	}
+	
+	
+	
     /**
      * Handle the message by parsing it and storing the data in memory.
      *
@@ -39,14 +60,20 @@ public class Router extends Base {
         super();
 
         spec_version = version;
-
+        
         if (version.compareTo((float) 1.2) >= 0)  {
-            headerNames = new String[]{"action", "seq", "name", "hash", "ip_address", "description", "term_code",
-                    "term_reason", "init_data", "term_data", "timestamp", "bgp_id"};
+        	
+        	// headers specific to v1.2 or greater
+        	String versionSpecificHeaders [] = new String[]{MsgBusFields.BGP_ID.getName()};
+    		
+        	List<String> headerList = new ArrayList();
+    		headerList.addAll(Arrays.asList(minimumHeaderNames));
+    		headerList.addAll(Arrays.asList(versionSpecificHeaders));
+    		
+    		headerNames = headerList.toArray(new String[headerList.size()]);
         }
         else {
-            headerNames = new String[]{"action", "seq", "name", "hash", "ip_address", "description", "term_code",
-                    "term_reason", "init_data", "term_data", "timestamp"};
+            headerNames = minimumHeaderNames;
         }
 
         parse(version, data);
@@ -63,36 +90,38 @@ public class Router extends Base {
 
         final CellProcessor[] processors;
 
+        final CellProcessor[] defaultCellProcessors = new CellProcessor[]{
+        		new NotNull(),                      // action
+                new ParseLong(),                    // seq
+                new ParseNullAsEmpty(),             // name
+                new NotNull(),                      // hash
+                new NotNull(),                      // IP Address
+                new ParseNullAsEmpty(),             // Description
+                new Optional(new ParseInt()),       // Term code
+                new ParseNullAsEmpty(),             // Term reason
+                new ParseNullAsEmpty(),             // Init data
+                new ParseNullAsEmpty(),             // Term data
+                new ParseTimestamp()                // Timestamp
+        };
+        
         if (spec_version.compareTo((float) 1.2) >= 0)  {
-            processors = new CellProcessor[]{
-                    new NotNull(),                      // action
-                    new ParseLong(),                    // seq
-                    new ParseNullAsEmpty(),             // name
-                    new NotNull(),                      // hash
-                    new NotNull(),                      // IP Address
-                    new ParseNullAsEmpty(),             // Description
-                    new Optional(new ParseInt()),       // Term code
-                    new ParseNullAsEmpty(),             // Term reason
-                    new ParseNullAsEmpty(),             // Init data
-                    new ParseNullAsEmpty(),             // Term data
-                    new ParseTimestamp(),               // Timestamp
-                    new ParseNullAsEmpty()              // Global BGP-ID for router
-            };
+        	
+        	CellProcessor[] versionSpecificProcessors = new CellProcessor[]{
+        			new ParseNullAsEmpty()              // Global BGP-ID for router
+        	};
+        	
+        	List<CellProcessor> processorsList = new ArrayList();
+        	processorsList.addAll(Arrays.asList(defaultCellProcessors));
+        	processorsList.addAll(Arrays.asList(versionSpecificProcessors));
+        	
+        	processors = processorsList.toArray(new CellProcessor[processorsList.size()]);
+        	
+           
         }
         else {
-            processors = new CellProcessor[]{
-                    new NotNull(),                      // action
-                    new ParseLong(),                    // seq
-                    new ParseNullAsEmpty(),             // name
-                    new NotNull(),                      // hash
-                    new NotNull(),                      // IP Address
-                    new ParseNullAsEmpty(),             // Description
-                    new Optional(new ParseInt()),       // Term code
-                    new ParseNullAsEmpty(),             // Term reason
-                    new ParseNullAsEmpty(),             // Init data
-                    new ParseNullAsEmpty(),             // Term data
-                    new ParseTimestamp()                // Timestamp
-            };
+           
+        	processors = defaultCellProcessors;
+        	
         }
 
         return processors;

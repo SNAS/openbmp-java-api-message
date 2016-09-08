@@ -23,20 +23,47 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
  */
 public class BaseAttribute extends Base {
 
+	    // Minimum set of headers each Object will have.
+		String [] minimumHeaderNames =new String[]{MsgBusFields.ACTION.getName(),MsgBusFields.SEQUENCE.getName(),MsgBusFields.HASH.getName(),MsgBusFields.ROUTER_HASH.getName(),
+												  MsgBusFields.ROUTER_IP.getName(),MsgBusFields.PEER_HASH.getName(),MsgBusFields.PEER_IP.getName(),MsgBusFields.PEER_ASN.getName(),
+												  MsgBusFields.TIMESTAMP.getName(),MsgBusFields.ORIGIN.getName(),MsgBusFields.AS_PATH.getName(),MsgBusFields.AS_PATH_COUNT.getName(),
+												  MsgBusFields.ORIGIN_AS.getName(),MsgBusFields.NEXTHOP.getName(),MsgBusFields.MED.getName(),MsgBusFields.LOCAL_PREF.getName(),
+												  MsgBusFields.AGGREGATOR.getName(),MsgBusFields.COMMUNITY_LIST.getName(),MsgBusFields.EXT_COMMUNITY_LIST.getName(),
+												  MsgBusFields.CLUSTER_LIST.getName(),MsgBusFields.ISATOMICAGG.getName(),MsgBusFields.IS_NEXTHOP_IPV4.getName(),MsgBusFields.ORIGINATOR_ID.getName()};
+	
+	
+   
+	/**
+	 * base constructor to support backward compatibility. Will run on the {@link Base.DEFAULT_SPEC_VERSION} version.
+	 * @param data
+	 */
+    public BaseAttribute(String data) {
+        super();
+        
+        headerNames = minimumHeaderNames;
+
+        parse(data);
+    }
+    
+    
     /**
      * Handle the message by parsing it and storing the data in memory.
      *
      * @param data
      */
-    public BaseAttribute(String data) {
+    public BaseAttribute(Float version, String data) {
         super();
-        headerNames = new String [] { "action", "seq", "hash", "router_hash", "router_ip", "peer_hash", "peer_ip",
-                                      "peer_asn", "timestamp", "origin", "as_path", "as_path_count", "origin_as",
-                                      "nexthop", "med", "local_pref", "aggregator", "community_list", "ext_community_list",
-                                      "cluster_list", "isAtomicAgg", "isNexthopIPv4", "originator_id" };
+        
+        spec_version = version;
+       
+        //Headers are same upto version 1.2 for this Object. 
+        //TODO:: If needed, add additional headers with later version. Refer to {@link LsLink} constructor.
+        headerNames = minimumHeaderNames;
 
-        parse(data);
+        parse(version, data);
     }
+    
+    
 
     /**
      * Processors used for each field.
