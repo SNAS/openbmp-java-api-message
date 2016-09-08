@@ -66,12 +66,11 @@ public class Router extends Base {
         	// headers specific to v1.2 or greater
         	String versionSpecificHeaders [] = new String[]{MsgBusFields.BGP_ID.getName()};
     		
-        	List<String> headerList = new ArrayList<>();
+        	List<String> headerList = new ArrayList();
     		headerList.addAll(Arrays.asList(minimumHeaderNames));
     		headerList.addAll(Arrays.asList(versionSpecificHeaders));
     		
-    		headerNames = (String[]) headerList.toArray();
-            
+    		headerNames = headerList.toArray(new String[headerList.size()]);
         }
         else {
             headerNames = minimumHeaderNames;
@@ -111,11 +110,11 @@ public class Router extends Base {
         			new ParseNullAsEmpty()              // Global BGP-ID for router
         	};
         	
-        	List<CellProcessor> processorsList = new ArrayList<>();
+        	List<CellProcessor> processorsList = new ArrayList();
         	processorsList.addAll(Arrays.asList(defaultCellProcessors));
         	processorsList.addAll(Arrays.asList(versionSpecificProcessors));
         	
-        	processors = (CellProcessor[])processorsList.toArray();
+        	processors = processorsList.toArray(new CellProcessor[processorsList.size()]);
         	
            
         }

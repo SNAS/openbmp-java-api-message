@@ -51,11 +51,11 @@ public class LsLink extends Base {
 	 	String latestVersionHeaders [] = new String[]{MsgBusFields.REMOTE_IGP_ROUTER_ID.getName(),MsgBusFields.REMOTE_ROUTER_ID.getName(),MsgBusFields.LOCAL_NODE_ASN.getName(),MsgBusFields.REMOTE_NODE_ASN.getName(),
 	 													MsgBusFields.PEER_NODE_SID.getName(),MsgBusFields.ISPREPOLICY.getName(),MsgBusFields.IS_ADJ_RIB_IN.getName()};
 		
-		List<String> headerList = new ArrayList<>();
+		List<String> headerList = new ArrayList();
 		headerList.addAll(Arrays.asList(minimumHeaderNames));
 		headerList.addAll(Arrays.asList(latestVersionHeaders));
 		
-		headerNames = (String[]) headerList.toArray();
+		headerNames = headerList.toArray(new String[headerList.size()]);
 		
 		parse(data);
 		 
@@ -71,7 +71,7 @@ public class LsLink extends Base {
      */
     public LsLink(Float version, String data) {
         super();
-
+        
         spec_version = version;
         
         if (version.compareTo((float) 1.3) >= 0)  {
@@ -80,11 +80,11 @@ public class LsLink extends Base {
         	String versionSpecificHeaders [] = new String[]{MsgBusFields.REMOTE_IGP_ROUTER_ID.getName(),MsgBusFields.REMOTE_ROUTER_ID.getName(),MsgBusFields.LOCAL_NODE_ASN.getName(),MsgBusFields.REMOTE_NODE_ASN.getName(),
             												MsgBusFields.PEER_NODE_SID.getName(),MsgBusFields.ISPREPOLICY.getName(),MsgBusFields.IS_ADJ_RIB_IN.getName()};
     		
-        	List<String> headerList = new ArrayList<>();
+        	List<String> headerList = new ArrayList();
     		headerList.addAll(Arrays.asList(minimumHeaderNames));
     		headerList.addAll(Arrays.asList(versionSpecificHeaders));
     		
-    		headerNames = (String[]) headerList.toArray();
+    		headerNames = headerList.toArray(new String[headerList.size()]);
         	
         	
         }else if (version.compareTo((float) 1.2) >= 0)  {
@@ -94,11 +94,11 @@ public class LsLink extends Base {
         	String versionSpecificHeaders [] = new String[]{MsgBusFields.REMOTE_IGP_ROUTER_ID.getName(),MsgBusFields.REMOTE_ROUTER_ID.getName(),MsgBusFields.LOCAL_NODE_ASN.getName(),MsgBusFields.REMOTE_NODE_ASN.getName(),
             												MsgBusFields.PEER_NODE_SID.getName()};
 
-        	List<String> headerList = new ArrayList<>();
+        	List<String> headerList = new ArrayList();
     		headerList.addAll(Arrays.asList(minimumHeaderNames));
     		headerList.addAll(Arrays.asList(versionSpecificHeaders));
     		
-    		headerNames = (String[]) headerList.toArray();
+    		headerNames = headerList.toArray(new String[headerList.size()]);
             
         }else {
         	
@@ -173,16 +173,15 @@ public class LsLink extends Base {
                     new ParseLongEmptyAsZero()      // isAdjRibIn
         	};
         	
-        	List<CellProcessor> processorsList = new ArrayList<>();
+        	List<CellProcessor> processorsList = new ArrayList();
         	processorsList.addAll(Arrays.asList(defaultCellProcessors));
         	processorsList.addAll(Arrays.asList(versionSpecificProcessors));
         	
-        	processors = (CellProcessor[])processorsList.toArray();
+        	processors = processorsList.toArray(new CellProcessor[processorsList.size()]);
         	
         }
 
         else if (spec_version.compareTo((float) 1.2) >= 0) {
-            System.out.println("spec version is >= 1.2: " + spec_version);
             
             CellProcessor[] versionSpecificProcessors = new CellProcessor[]{
             		new ParseNullAsEmpty(),         // remote_igp_router_id
@@ -192,11 +191,11 @@ public class LsLink extends Base {
                     new ParseNullAsEmpty()          // Peer node SID
         	};
             
-            List<CellProcessor> processorsList = new ArrayList<>();
+            List<CellProcessor> processorsList = new ArrayList();
         	processorsList.addAll(Arrays.asList(defaultCellProcessors));
         	processorsList.addAll(Arrays.asList(versionSpecificProcessors));
         	
-        	processors = (CellProcessor[])processorsList.toArray();
+        	processors = processorsList.toArray(new CellProcessor[processorsList.size()]);
             
         }
         else {

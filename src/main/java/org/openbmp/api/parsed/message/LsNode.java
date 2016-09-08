@@ -45,11 +45,11 @@ public class LsNode extends Base {
 		
 		String latestVersionHeaders [] = new String[]{MsgBusFields.ISPREPOLICY.getName(),MsgBusFields.IS_ADJ_RIB_IN.getName()};
 		
-		List<String> headerList = new ArrayList<>();
+		List<String> headerList = new ArrayList();
 		headerList.addAll(Arrays.asList(minimumHeaderNames));
 		headerList.addAll(Arrays.asList(latestVersionHeaders));
 		
-		headerNames = (String[]) headerList.toArray();
+		headerNames = headerList.toArray(new String[headerList.size()]);
 		
 		parse(data);
 		
@@ -73,11 +73,11 @@ public class LsNode extends Base {
         	//headers specific to v1.3
         	String versionSpecificHeaders [] = new String[]{MsgBusFields.ISPREPOLICY.getName(),MsgBusFields.IS_ADJ_RIB_IN.getName()};
     		
-    		List<String> headerList = new ArrayList<>();
+    		List<String> headerList = new ArrayList();
     		headerList.addAll(Arrays.asList(minimumHeaderNames));
     		headerList.addAll(Arrays.asList(versionSpecificHeaders));
     		
-    		headerNames = (String[]) headerList.toArray();
+    		headerNames = headerList.toArray(new String[headerList.size()]);
 
         }
         else {
@@ -134,11 +134,11 @@ public class LsNode extends Base {
                     new ParseLongEmptyAsZero()      // isAdjRibIn
         	};
             
-        	List<CellProcessor> processorsList = new ArrayList<>();
+        	List<CellProcessor> processorsList = new ArrayList();
         	processorsList.addAll(Arrays.asList(defaultCellProcessors));
         	processorsList.addAll(Arrays.asList(versionSpecificProcessors));
         	
-        	processors = (CellProcessor[])processorsList.toArray();
+        	processors = processorsList.toArray(new CellProcessor[processorsList.size()]);
         	
         }
         else {
