@@ -7,6 +7,7 @@ package org.openbmp.api.parsed.processor;
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  *
  */
+
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.util.CsvContext;
@@ -30,8 +31,7 @@ public class ParseLongEmptyAsZero extends CellProcessorAdaptor {
         Long lvalue = 0L;
         if (value == null) {
             return next.execute(lvalue, context);
-        }
-        else {
+        } else {
             try {
                 lvalue = Long.valueOf(value.toString());
             } catch (NumberFormatException e) {

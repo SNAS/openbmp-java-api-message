@@ -7,6 +7,7 @@ package org.openbmp.api.parsed.message;
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  *
  */
+
 import org.openbmp.api.parsed.processor.ParseNullAsEmpty;
 import org.openbmp.api.parsed.processor.ParseTimestamp;
 import org.supercsv.cellprocessor.ParseInt;
@@ -19,33 +20,32 @@ import java.util.TimerTask;
 
 /**
  * Format class for collector parsed messages (openbmp.parsed.collector)
- *
- * Schema Version: 1.2
- *
+ * <p>
+ * Schema Version: 1.4
  */
 public class Collector extends Base {
 
-    private static Map<String,TimerTask> heartbeatListeners;
-    
-    // Minimum set of headers each version will have for this Object.
- 	String [] minimumHeaderNames =new String[]{MsgBusFields.ACTION.getName(),MsgBusFields.SEQUENCE.getName(),MsgBusFields.ADMIN_ID.getName(),MsgBusFields.HASH.getName(),
-			 								   MsgBusFields.ROUTERS.getName(),MsgBusFields.ROUTER_COUNT.getName(),MsgBusFields.TIMESTAMP.getName()};
+    private static Map<String, TimerTask> heartbeatListeners;
 
-   
- 	/**
-	 * base constructor to support backward compatibility. Will run on the {@link Base.DEFAULT_SPEC_VERSION} version.
-	 * @param data
-	 */
+    String[] schemaHeaderNames = new String[]{MsgBusFields.ACTION.getName(), MsgBusFields.SEQUENCE.getName(), MsgBusFields.ADMIN_ID.getName(), MsgBusFields.HASH.getName(),
+            MsgBusFields.ROUTERS.getName(), MsgBusFields.ROUTER_COUNT.getName(), MsgBusFields.TIMESTAMP.getName()};
+
+
+    /**
+     * base constructor to support backward compatibility. Will run on the {@link Base.DEFAULT_SPEC_VERSION} version.
+     *
+     * @param data
+     */
     public Collector(String data) {
         super();
-        
-        headerNames = minimumHeaderNames;
+
+        headerNames = schemaHeaderNames;
 
         // TODO: Change below to supply version when version is required
         parse(data);
     }
 
-    
+
     /**
      * Handle the message by parsing it and storing the data in memory.
      *
@@ -53,28 +53,28 @@ public class Collector extends Base {
      */
     public Collector(Float version, String data) {
         super();
-        
+
         spec_version = version;
-        
+
         //Headers are same upto version 1.2 for this Object. 
         //TODO:: If needed, add additional headers with later version. Refer to {@link LsLink} constructor.
-        headerNames = minimumHeaderNames;
-        
-        
+        headerNames = schemaHeaderNames;
+
+
         parse(version, data);
     }
-    
-    
+
+
     /**
      * Processors used for each field.
-     *
+     * <p>
      * Order matters and must match the same order as defined in headerNames
      *
      * @return array of cell processors
      */
     protected CellProcessor[] getProcessors() {
 
-        final CellProcessor[] processors = new CellProcessor[] {
+        final CellProcessor[] processors = new CellProcessor[]{
                 new NotNull(),          // action
                 new ParseLong(),        // seq
                 new NotNull(),          // admin id

@@ -7,6 +7,7 @@ package org.openbmp.api.parsed.message;
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  *
  */
+
 import org.codehaus.jackson.JsonFactory;
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonGenerator;
@@ -22,29 +23,29 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Base class for parsing openbmp.parsed.* messages.
- *
+ * <p>
  * See http://openbmp.org/#!docs/MESSAGE_BUS_API.md for more details.
- *
- * Schema Version: 1.3
+ * <p>
+ * Schema Version: 1.4
  *
  * @note The schema version is the max version supported.  Each extended class is responsible for handling
- *      backwards compatibility.
- *
+ * backwards compatibility.
  */
 public abstract class Base {
-    private final Float DEFAULT_SPEC_VERSION = new Float(1.3);     // Default message bus specification version (max) supported
+    private final Float DEFAULT_SPEC_VERSION = new Float(1.4);     // Default message bus specification version (max) supported
     protected Float spec_version;                                     // Configured message bus specification version (max) supported
 
     /**
      * column field header names
-     *      Will be the MAP key for fields, order matters and must match TSV order of fields.
+     * Will be the MAP key for fields, order matters and must match TSV order of fields.
      */
-    protected String [] headerNames;
+    protected String[] headerNames;
 
     protected List<Map<String, Object>> rowMap;
 
@@ -58,25 +59,23 @@ public abstract class Base {
 
     /**
      * Parse TSV rows of data from message
-     *      Defaults to use current message bus version
+     * Defaults to use current message bus version
      *
-     * @param data          TSV data (MUST not include the headers)
-     *
-     * @return  True if error, False if no errors
+     * @param data TSV data (MUST not include the headers)
+     * @return True if error, False if no errors
      */
     public boolean parse(String data) {
         return parse(DEFAULT_SPEC_VERSION, data);
     }
 
-        /**
-         * Parse TSV rows of data from message
-         *
-         * @param version       Float representation of maximum message bus specification version supported.
-         *                          See http://openbmp.org/#!docs/MESSAGE_BUS_API.md for more details.
-         * @param data          TSV data (MUST not include the headers)
-         *
-         * @return  True if error, False if no errors
-         */
+    /**
+     * Parse TSV rows of data from message
+     *
+     * @param version Float representation of maximum message bus specification version supported.
+     *                See http://openbmp.org/#!docs/MESSAGE_BUS_API.md for more details.
+     * @param data    TSV data (MUST not include the headers)
+     * @return True if error, False if no errors
+     */
     public boolean parse(Float version, String data) {
 
         this.spec_version = version;
@@ -96,8 +95,15 @@ public abstract class Base {
         try {
             //System.out.println("Headers=" + Arrays.toString(headerNames));
             Map<String, Object> map;
-            while( (map = mapReader.read(headerNames, processors)) != null )
-            {
+
+            // Adjust headers to match processor length
+            if (headerNames.length != processors.length) {
+                List<String> headerList = new ArrayList<>();
+                headerList.addAll(Arrays.asList(headerNames));
+                headerNames = headerList.subList(0, processors.length).toArray(new String[processors.length]);
+            }
+
+            while ((map = mapReader.read(headerNames, processors)) != null) {
                 rowMap.add(map);
                 //System.out.println(String.format("lineNo=%s, rowNo=%s, Map=%s", mapReader.getLineNumber(),
                 //        mapReader.getRowNumber(), map));
@@ -110,7 +116,7 @@ public abstract class Base {
             e.printStackTrace();
             return true;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return true;
         }
@@ -120,7 +126,7 @@ public abstract class Base {
 
     /**
      * Processors used for each field.
-     *
+     * <p>
      * Order matters and must match the same order as defined in headerNames
      *
      * @return array of cell processors
@@ -149,10 +155,10 @@ public abstract class Base {
             /*
              * Iterate the row map and write each entry as an object
              */
-            for (int i=0; i < rowMap.size(); i++) {
+            for (int i = 0; i < rowMap.size(); i++) {
                 jgen.writeStartObject();
 
-                for (Map.Entry<String, Object> record : rowMap.get(i).entrySet() ) {
+                for (Map.Entry<String, Object> record : rowMap.get(i).entrySet()) {
                     jgen.writeObjectField(record.getKey(), record.getValue());
                 }
 
@@ -196,7 +202,6 @@ public abstract class Base {
 
         return json_pretty;
     }
-
 
 
     /**

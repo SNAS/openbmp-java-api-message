@@ -15,26 +15,26 @@ import org.supercsv.cellprocessor.ift.CellProcessor;
 
 /**
  * Format class for bmp_stat parsed messages (openbmp.parsed.bmp_stat)
- *
- * Schema Version: 1.2
- *
+ * <p>
+ * Schema Version: 1.4
  */
 public class BmpStat extends Base {
-	
-	String [] minimumHeaderNames = new String[]{MsgBusFields.ACTION.getName(),MsgBusFields.SEQUENCE.getName(),MsgBusFields.ROUTER_HASH.getName(),MsgBusFields.ROUTER_IP.getName(),
-									    		MsgBusFields.PEER_HASH.getName(),MsgBusFields.PEER_IP.getName(),MsgBusFields.PEER_ASN.getName(),MsgBusFields.TIMESTAMP.getName(),MsgBusFields.REJECTED.getName(),
-									    		MsgBusFields.KNOWN_DUP_UPDATES.getName(),MsgBusFields.KNOWN_DUP_WITHDRAWS.getName(),MsgBusFields.INVALID_CLUSTER_LIST.getName(),
-									    		MsgBusFields.INVALID_AS_PATH.getName(),MsgBusFields.INVALID_ORIGINATOR.getName(),MsgBusFields.INVALID_AS_CONFED.getName(),MsgBusFields.PRE_POLICY.getName(),
-									    		MsgBusFields.POST_POLICY.getName()};
 
-   
-	/**
-	 * base constructor to support backward compatibility. Will run on the {@link Base.DEFAULT_SPEC_VERSION} version.
-	 * @param data
-	 */
+    String[] minimumHeaderNames = new String[]{MsgBusFields.ACTION.getName(), MsgBusFields.SEQUENCE.getName(), MsgBusFields.ROUTER_HASH.getName(), MsgBusFields.ROUTER_IP.getName(),
+            MsgBusFields.PEER_HASH.getName(), MsgBusFields.PEER_IP.getName(), MsgBusFields.PEER_ASN.getName(), MsgBusFields.TIMESTAMP.getName(), MsgBusFields.REJECTED.getName(),
+            MsgBusFields.KNOWN_DUP_UPDATES.getName(), MsgBusFields.KNOWN_DUP_WITHDRAWS.getName(), MsgBusFields.INVALID_CLUSTER_LIST.getName(),
+            MsgBusFields.INVALID_AS_PATH.getName(), MsgBusFields.INVALID_ORIGINATOR.getName(), MsgBusFields.INVALID_AS_CONFED.getName(), MsgBusFields.PRE_POLICY.getName(),
+            MsgBusFields.POST_POLICY.getName()};
+
+
+    /**
+     * base constructor to support backward compatibility. Will run on the {@link Base.DEFAULT_SPEC_VERSION} version.
+     *
+     * @param data
+     */
     public BmpStat(String data) {
         super();
-        
+
         headerNames = minimumHeaderNames;
 
         parse(data);
@@ -47,27 +47,27 @@ public class BmpStat extends Base {
      */
     public BmpStat(Float version, String data) {
         super();
-        
+
         spec_version = version;
-        
+
         //Headers are same upto version 1.2 for this Object. 
         //TODO:: If needed, add additional headers with later version. Refer to {@link LsLink} constructor.
         headerNames = minimumHeaderNames;
 
         parse(version, data);
     }
-    
-    
+
+
     /**
      * Processors used for each field.
-     *
+     * <p>
      * Order matters and must match the same order as defined in headerNames
      *
      * @return array of cell processors
      */
     protected CellProcessor[] getProcessors() {
 
-        final CellProcessor[] processors = new CellProcessor[] {
+        final CellProcessor[] processors = new CellProcessor[]{
                 new NotNull(),          // action
                 new ParseLong(),        // seq
                 new NotNull(),          // hash

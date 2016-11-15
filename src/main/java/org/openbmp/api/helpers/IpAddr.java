@@ -20,8 +20,7 @@ public class IpAddr {
     /**
      * Check if IP is IPv4 or IPv6
      *
-     * @param ip_address        IP address in printed form (IPv4 or IPv6)
-     *
+     * @param ip_address IP address in printed form (IPv4 or IPv6)
      * @return True if IPv4, False if IPv6 and null if error/invalid
      */
     public static Boolean isIPv4(String ip_address) {
@@ -30,7 +29,7 @@ public class IpAddr {
         InetAddress ipaddr = null;
         try {
             ipaddr = InetAddress.getByName(ip_address);
-            byte [] addr = ipaddr.getAddress();
+            byte[] addr = ipaddr.getAddress();
             if (addr.length > 4)
                 ipv4 = false;
             else
@@ -47,12 +46,11 @@ public class IpAddr {
     /**
      * Convert printed IP to byte array
      *
-     * @param ip_address        IP address in printed form (IPv4 or IPv6)
-     *
+     * @param ip_address IP address in printed form (IPv4 or IPv6)
      * @return IP address in byte array form
      */
-    public static byte [] getIpBytes(String ip_address) {
-        byte [] addr = null;
+    public static byte[] getIpBytes(String ip_address) {
+        byte[] addr = null;
 
         InetAddress ipaddr = null;
         try {
@@ -69,8 +67,7 @@ public class IpAddr {
     /**
      * Resolve IP address to FQDN
      *
-     * @param ip_address        IP address in printed form (IPv4 or IPv6)
-     *
+     * @param ip_address IP address in printed form (IPv4 or IPv6)
      * @return Null if error or not found, otherwise the hostname
      */
     public static String resolveIp(String ip_address) {
@@ -91,8 +88,7 @@ public class IpAddr {
     /**
      * Convert IP to mysql varbinary HEX form for insert/update
      *
-     * @param ip_address        IP address in printed form (IPv4 or IPv6)
-     *
+     * @param ip_address IP address in printed form (IPv4 or IPv6)
      * @return HEX string value that can be used to insert/update a varbinary column in MySQL
      */
     public static String getIpHex(String ip_address) {
@@ -101,7 +97,7 @@ public class IpAddr {
         InetAddress ipaddr = null;
         try {
             ipaddr = InetAddress.getByName(ip_address);
-            byte [] addr = ipaddr.getAddress();
+            byte[] addr = ipaddr.getAddress();
 
             for (int i = 0; i < addr.length; i++) {
                 hex_binary_ip.append(String.format("%02X", addr[i]));
@@ -117,8 +113,7 @@ public class IpAddr {
     /**
      * Convert IP to mysql  binary string form for insert/update
      *
-     * @param ip_address        IP address in printed form (IPv4 or IPv6)
-     *
+     * @param ip_address IP address in printed form (IPv4 or IPv6)
      * @return bit string value that can be used to insert/update a varbinary column in MySQL
      */
     public static String getIpBits(String ip_address) {
@@ -127,7 +122,7 @@ public class IpAddr {
         InetAddress ipaddr = null;
         try {
             ipaddr = InetAddress.getByName(ip_address);
-            byte [] addr = ipaddr.getAddress();
+            byte[] addr = ipaddr.getAddress();
 
             for (int i = 0; i < addr.length; i++) {
                 for (int i_bit = 7; i_bit >= 0; i_bit--) {
@@ -149,9 +144,8 @@ public class IpAddr {
     /**
      * Get IP broadcast in HEX form for mysql varbinary insert/update
      *
-     * @param ip_address        IP address in printed form (IPv4 or IPv6)
-     * @param bits              IP network length in bits
-     *
+     * @param ip_address IP address in printed form (IPv4 or IPv6)
+     * @param bits       IP network length in bits
      * @return HEX string value that can be used to insert/update a varbinary column in MySQL
      */
     public static String getIpBroadcastHex(String ip_address, int bits) {
@@ -171,8 +165,7 @@ public class IpAddr {
                 hex_binary_ip.append("FF");
             }
 
-        }
-        else {
+        } else {
 
             try {
                 ipaddr = InetAddress.getByName(ip_address);

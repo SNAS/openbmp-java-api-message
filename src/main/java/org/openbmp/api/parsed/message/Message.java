@@ -10,7 +10,8 @@ package org.openbmp.api.parsed.message;
 
 /**
  * Parses raw openbmp.parsed.* message headers and content portion
- *      @See http://openbmp.org/#!docs/MESSAGE_BUS_API.md for more details on structure of message.
+ *
+ * @See http://openbmp.org/#!docs/MESSAGE_BUS_API.md for more details on structure of message.
  */
 public class Message {
     private Float version;
@@ -24,7 +25,7 @@ public class Message {
 
     /**
      * Constructor
-     *      Parse the data
+     * Parse the data
      *
      * @param data
      */
@@ -46,7 +47,7 @@ public class Message {
 
         String headers[] = header_data.split("\n");
 
-        for(String header : headers) {
+        for (String header : headers) {
 
             String value = header.split(":")[1].trim();
             String attr = header.split(":")[0].trim();
@@ -74,15 +75,19 @@ public class Message {
     public Float getVersion() {
         return version;
     }
+
     public String getCollector_hash_id() {
         return collector_hash_id;
     }
+
     public long getLength() {
         return length;
     }
+
     public long getRecords() {
         return records;
     }
+
     public String getRouter_hash_id() {
         return router_hash_id;
     }
@@ -90,6 +95,7 @@ public class Message {
     public Integer getContentPos() {
         return content_pos;
     }
+
     public String getContent() {
         return content;
     }

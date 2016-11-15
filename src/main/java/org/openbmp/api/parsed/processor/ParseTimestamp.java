@@ -7,6 +7,7 @@ package org.openbmp.api.parsed.processor;
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  *
  */
+
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.util.CsvContext;
@@ -14,8 +15,8 @@ import org.supercsv.util.CsvContext;
 
 /**
  * Processor class to parse the timestamp from openbmp.parsed.* messages
- *
- *      Format is standard java.sql.Timestamp of 'YYYY-mm-dd HH:MM:SS.ffffff'
+ * <p>
+ * Format is standard java.sql.Timestamp of 'YYYY-mm-dd HH:MM:SS.ffffff'
  */
 @SuppressWarnings("unchecked")
 public class ParseTimestamp extends CellProcessorAdaptor {

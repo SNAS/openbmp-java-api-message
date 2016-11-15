@@ -7,6 +7,7 @@ package org.openbmp.api.parsed.processor;
  * and is available at http://www.eclipse.org/legal/epl-v10.html
  *
  */
+
 import org.supercsv.cellprocessor.CellProcessorAdaptor;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 import org.supercsv.util.CsvContext;

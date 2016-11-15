@@ -8,118 +8,83 @@ package org.openbmp.api.parsed.message;
  *
  */
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import org.openbmp.api.helpers.IpAddr;
 import org.openbmp.api.parsed.processor.ParseLongEmptyAsZero;
 import org.openbmp.api.parsed.processor.ParseNullAsEmpty;
 import org.openbmp.api.parsed.processor.ParseTimestamp;
 import org.supercsv.cellprocessor.ParseLong;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
-import org.supercsv.util.CsvContext;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Format class for ls_link parsed messages (openbmp.parsed.ls_link)
- *
- * Schema Version: 1.3
- *
+ * <p>
+ * Schema Version: 1.4
  */
 public class LsLink extends Base {
-	
-	// Minimum set of headers each Object will have.
-	String [] minimumHeaderNames =new String[]{MsgBusFields.ACTION.getName(),MsgBusFields.SEQUENCE.getName(),MsgBusFields.HASH.getName(),MsgBusFields.BASE_ATTR_HASH.getName(),MsgBusFields.ROUTER_HASH.getName(),
-											   MsgBusFields.ROUTER_IP.getName(),MsgBusFields.PEER_HASH.getName(),MsgBusFields.PEER_IP.getName(),MsgBusFields.PEER_ASN.getName(),MsgBusFields.TIMESTAMP.getName(),
-											   MsgBusFields.IGP_ROUTER_ID.getName(),MsgBusFields.ROUTER_ID.getName(),MsgBusFields.ROUTING_ID.getName(),MsgBusFields.LS_ID.getName(),MsgBusFields.OSPF_AREA_ID.getName(),
-											   MsgBusFields.ISIS_AREA_ID.getName(),MsgBusFields.PROTOCOL.getName(),MsgBusFields.AS_PATH.getName(),MsgBusFields.LOCAL_PREF.getName(),MsgBusFields.MED.getName(),
-											   MsgBusFields.NEXTHOP.getName(),MsgBusFields.MT_ID.getName(),MsgBusFields.LOCAL_LINK_ID.getName(),MsgBusFields.REMOTE_LINK_ID.getName(),MsgBusFields.INTF_IP.getName(),
-											   MsgBusFields.NEI_IP.getName(),MsgBusFields.IGP_METRIC.getName(),MsgBusFields.ADMIN_GROUP.getName(),MsgBusFields.MAX_LINK_BW.getName(),MsgBusFields.MAX_RESV_BW.getName(),
-											   MsgBusFields.UNRESV_BW.getName(),MsgBusFields.TE_DEFAULT_METRIC.getName(),MsgBusFields.LINK_PROTECTION.getName(),MsgBusFields.MPLS_PROTO_MASK.getName(),
-											   MsgBusFields.SRLG.getName(),MsgBusFields.LINK_NAME.getName(),MsgBusFields.REMOTE_NODE_HASH.getName(),MsgBusFields.LOCAL_NODE_HASH.getName()};
-	
-	
-			   
-	/**
-	 * base constructor to support backward compatibility. Will run on the {@link Base.DEFAULT_SPEC_VERSION} version.
-	 * @param data
-	 */ 
-	public LsLink(String data) {
-	 	super();
-		
-	 	String latestVersionHeaders [] = new String[]{MsgBusFields.REMOTE_IGP_ROUTER_ID.getName(),MsgBusFields.REMOTE_ROUTER_ID.getName(),MsgBusFields.LOCAL_NODE_ASN.getName(),MsgBusFields.REMOTE_NODE_ASN.getName(),
-	 													MsgBusFields.PEER_NODE_SID.getName(),MsgBusFields.ISPREPOLICY.getName(),MsgBusFields.IS_ADJ_RIB_IN.getName()};
-		
-		List<String> headerList = new ArrayList();
-		headerList.addAll(Arrays.asList(minimumHeaderNames));
-		headerList.addAll(Arrays.asList(latestVersionHeaders));
-		
-		headerNames = headerList.toArray(new String[headerList.size()]);
-		
-		parse(data);
-		 
-	 }
-	
+
+    String[] schemaHeaderNames = new String[]{MsgBusFields.ACTION.getName(), MsgBusFields.SEQUENCE.getName(), MsgBusFields.HASH.getName(), MsgBusFields.BASE_ATTR_HASH.getName(), MsgBusFields.ROUTER_HASH.getName(),
+            MsgBusFields.ROUTER_IP.getName(), MsgBusFields.PEER_HASH.getName(), MsgBusFields.PEER_IP.getName(), MsgBusFields.PEER_ASN.getName(), MsgBusFields.TIMESTAMP.getName(),
+            MsgBusFields.IGP_ROUTER_ID.getName(), MsgBusFields.ROUTER_ID.getName(), MsgBusFields.ROUTING_ID.getName(), MsgBusFields.LS_ID.getName(), MsgBusFields.OSPF_AREA_ID.getName(),
+            MsgBusFields.ISIS_AREA_ID.getName(), MsgBusFields.PROTOCOL.getName(), MsgBusFields.AS_PATH.getName(), MsgBusFields.LOCAL_PREF.getName(), MsgBusFields.MED.getName(),
+            MsgBusFields.NEXTHOP.getName(), MsgBusFields.MT_ID.getName(), MsgBusFields.LOCAL_LINK_ID.getName(), MsgBusFields.REMOTE_LINK_ID.getName(), MsgBusFields.INTF_IP.getName(),
+            MsgBusFields.NEI_IP.getName(), MsgBusFields.IGP_METRIC.getName(), MsgBusFields.ADMIN_GROUP.getName(), MsgBusFields.MAX_LINK_BW.getName(), MsgBusFields.MAX_RESV_BW.getName(),
+            MsgBusFields.UNRESV_BW.getName(), MsgBusFields.TE_DEFAULT_METRIC.getName(), MsgBusFields.LINK_PROTECTION.getName(), MsgBusFields.MPLS_PROTO_MASK.getName(),
+            MsgBusFields.SRLG.getName(), MsgBusFields.LINK_NAME.getName(),
+            MsgBusFields.REMOTE_NODE_HASH.getName(), MsgBusFields.LOCAL_NODE_HASH.getName(),
+            MsgBusFields.REMOTE_IGP_ROUTER_ID.getName(), MsgBusFields.REMOTE_ROUTER_ID.getName(),
+            MsgBusFields.LOCAL_NODE_ASN.getName(), MsgBusFields.REMOTE_NODE_ASN.getName(),
+            MsgBusFields.PEER_NODE_SID.getName(), MsgBusFields.ISPREPOLICY.getName(), MsgBusFields.IS_ADJ_RIB_IN.getName(),
+            MsgBusFields.LS_ADJACENCY_SID.getName()};
+
+
+    /**
+     * base constructor to support backward compatibility.
+     *
+     * @param data
+     */
+    public LsLink(String data) {
+        super();
+
+        headerNames = schemaHeaderNames;
+
+        parse(data);
+
+    }
+
 
     /**
      * Handle the message by parsing it and storing the data in memory.
      *
-     * @param version       Float representation of maximum message bus specification version supported.
-     *                          See http://openbmp.org/#!docs/MESSAGE_BUS_API.md for more details.
-     * @param data          TSV data (MUST not include the headers)
+     * @param version Float representation of maximum message bus specification version supported.
+     *                See http://openbmp.org/#!docs/MESSAGE_BUS_API.md for more details.
+     * @param data    TSV data (MUST not include the headers)
      */
     public LsLink(Float version, String data) {
         super();
-        
-        spec_version = version;
-        
-        if (version.compareTo((float) 1.3) >= 0)  {
-        	
-        	// headers unique to version 1.3
-        	String versionSpecificHeaders [] = new String[]{MsgBusFields.REMOTE_IGP_ROUTER_ID.getName(),MsgBusFields.REMOTE_ROUTER_ID.getName(),MsgBusFields.LOCAL_NODE_ASN.getName(),MsgBusFields.REMOTE_NODE_ASN.getName(),
-            												MsgBusFields.PEER_NODE_SID.getName(),MsgBusFields.ISPREPOLICY.getName(),MsgBusFields.IS_ADJ_RIB_IN.getName()};
-    		
-        	List<String> headerList = new ArrayList();
-    		headerList.addAll(Arrays.asList(minimumHeaderNames));
-    		headerList.addAll(Arrays.asList(versionSpecificHeaders));
-    		
-    		headerNames = headerList.toArray(new String[headerList.size()]);
-        	
-        	
-        }else if (version.compareTo((float) 1.2) >= 0)  {
-        	
-        	
-        	// headers unique to version 1.2
-        	String versionSpecificHeaders [] = new String[]{MsgBusFields.REMOTE_IGP_ROUTER_ID.getName(),MsgBusFields.REMOTE_ROUTER_ID.getName(),MsgBusFields.LOCAL_NODE_ASN.getName(),MsgBusFields.REMOTE_NODE_ASN.getName(),
-            												MsgBusFields.PEER_NODE_SID.getName()};
 
-        	List<String> headerList = new ArrayList();
-    		headerList.addAll(Arrays.asList(minimumHeaderNames));
-    		headerList.addAll(Arrays.asList(versionSpecificHeaders));
-    		
-    		headerNames = headerList.toArray(new String[headerList.size()]);
-            
-        }else {
-        	
-            headerNames = minimumHeaderNames;
-        }
+        spec_version = version;
+
+        headerNames = schemaHeaderNames;
 
         parse(version, data);
     }
 
     /**
      * Processors used for each field.
-     *
+     * <p>
      * Order matters and must match the same order as defined in headerNames
      *
      * @return array of cell processors
      */
     protected CellProcessor[] getProcessors() {
-    	
-    	final CellProcessor[] processors;
 
-    	final CellProcessor[] defaultCellProcessors = new CellProcessor[]{
+        final CellProcessor[] processors;
+
+        final CellProcessor[] defaultCellProcessors = new CellProcessor[]{
                 new NotNull(),                  // action
                 new ParseLong(),                // seq
                 new NotNull(),                  // hash
@@ -157,51 +122,66 @@ public class LsLink extends Base {
                 new ParseNullAsEmpty(),         // srlg
                 new ParseNullAsEmpty(),         // link_name
                 new ParseNullAsEmpty(),         // remote_node_hash
-                new ParseNullAsEmpty()         // local_node_hash
+                new ParseNullAsEmpty()          // local_node_hash
         };
-        
 
-        if (spec_version.compareTo((float) 1.3) >= 0) {
-        	
-        	CellProcessor[] versionSpecificProcessors = new CellProcessor[]{
-        			new ParseNullAsEmpty(),         // remote_igp_router_id
+
+        if (spec_version.compareTo((float) 1.4) >= 0) {
+            CellProcessor[] versionSpecificProcessors = new CellProcessor[]{
+                    new ParseNullAsEmpty(),         // remote_igp_router_id
+                    new ParseNullAsEmpty(),         // remote_router_id
+                    new ParseLongEmptyAsZero(),     // local_node_asn
+                    new ParseLongEmptyAsZero(),     // remote_node_asn
+                    new ParseNullAsEmpty(),         // Peer node SID
+                    new ParseLongEmptyAsZero(),     // isPrePolicy
+                    new ParseLongEmptyAsZero(),     // isAdjRibIn
+                    new ParseNullAsEmpty()          // SR Adjacency SID list
+            };
+
+            List<CellProcessor> processorsList = new ArrayList();
+            processorsList.addAll(Arrays.asList(defaultCellProcessors));
+            processorsList.addAll(Arrays.asList(versionSpecificProcessors));
+
+            processors = processorsList.toArray(new CellProcessor[processorsList.size()]);
+
+        } else if (spec_version.compareTo((float) 1.3) >= 0) {
+
+            CellProcessor[] versionSpecificProcessors = new CellProcessor[]{
+                    new ParseNullAsEmpty(),         // remote_igp_router_id
                     new ParseNullAsEmpty(),         // remote_router_id
                     new ParseLongEmptyAsZero(),     // local_node_asn
                     new ParseLongEmptyAsZero(),     // remote_node_asn
                     new ParseNullAsEmpty(),         // Peer node SID
                     new ParseLongEmptyAsZero(),     // isPrePolicy
                     new ParseLongEmptyAsZero()      // isAdjRibIn
-        	};
-        	
-        	List<CellProcessor> processorsList = new ArrayList();
-        	processorsList.addAll(Arrays.asList(defaultCellProcessors));
-        	processorsList.addAll(Arrays.asList(versionSpecificProcessors));
-        	
-        	processors = processorsList.toArray(new CellProcessor[processorsList.size()]);
-        	
-        }
+            };
 
-        else if (spec_version.compareTo((float) 1.2) >= 0) {
-            
+            List<CellProcessor> processorsList = new ArrayList();
+            processorsList.addAll(Arrays.asList(defaultCellProcessors));
+            processorsList.addAll(Arrays.asList(versionSpecificProcessors));
+
+            processors = processorsList.toArray(new CellProcessor[processorsList.size()]);
+
+        } else if (spec_version.compareTo((float) 1.2) >= 0) {
+
             CellProcessor[] versionSpecificProcessors = new CellProcessor[]{
-            		new ParseNullAsEmpty(),         // remote_igp_router_id
+                    new ParseNullAsEmpty(),         // remote_igp_router_id
                     new ParseNullAsEmpty(),         // remote_router_id
                     new ParseLongEmptyAsZero(),     // local_node_asn
                     new ParseLongEmptyAsZero(),     // remote_node_asn
                     new ParseNullAsEmpty()          // Peer node SID
-        	};
-            
+            };
+
             List<CellProcessor> processorsList = new ArrayList();
-        	processorsList.addAll(Arrays.asList(defaultCellProcessors));
-        	processorsList.addAll(Arrays.asList(versionSpecificProcessors));
-        	
-        	processors = processorsList.toArray(new CellProcessor[processorsList.size()]);
-            
-        }
-        else {
-        	
+            processorsList.addAll(Arrays.asList(defaultCellProcessors));
+            processorsList.addAll(Arrays.asList(versionSpecificProcessors));
+
+            processors = processorsList.toArray(new CellProcessor[processorsList.size()]);
+
+        } else {
+
             processors = defaultCellProcessors;
-            
+
         }
 
         return processors;
