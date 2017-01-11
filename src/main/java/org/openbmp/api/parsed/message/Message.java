@@ -20,6 +20,8 @@ public class Message {
     private long records;
     private String router_hash_id;
     private String content;
+    private String type;
+    private String request_uuid;
 
     private Integer content_pos;
 
@@ -65,6 +67,10 @@ public class Message {
                 this.records = Long.valueOf(value);
             } else if (attr.equals("R_HASH_ID")) {
                 this.router_hash_id = value;
+            } else if (attr.equals("T")) {
+                this.type = value;
+            } else if (attr.equals("REQ_ID")) {
+                this.request_uuid = value;
             }
         }
     }
@@ -95,6 +101,10 @@ public class Message {
     public Integer getContentPos() {
         return content_pos;
     }
+
+    public String getType() { return type; }
+
+    public String getRequest_uuid() { return request_uuid; }
 
     public String getContent() {
         return content;
