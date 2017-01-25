@@ -42,7 +42,7 @@ public class Message {
      */
     private void parse(String data) {
 
-        int data_end_pos = data.lastIndexOf("\n\n");
+        int data_end_pos = data.indexOf("\n\n");
         String header_data = data.substring(0, data_end_pos);
         content_pos = data_end_pos + 2;
         content = data.substring(content_pos);
