@@ -59,6 +59,15 @@ public class LogSink {
         logger.info("UNICAST_PREFIX("+ msg.getVersion() + "): " + unicastPrefix.toJsonPretty());
     }
 
+    @ServiceActivator(inputChannel=SinkInput.L3VPN)
+    public void log_L3Vpn(Object payload) {
+
+        Message msg = new Message(payload.toString());
+        L3VpnPrefix l3VpnPrefix = new L3VpnPrefix(msg.getVersion(), msg.getContent());
+
+        logger.info("L3VPN_PREFIX(" + msg.getVersion() + "): " + l3VpnPrefix.toJsonPretty());
+    }
+
     @ServiceActivator(inputChannel=SinkInput.LS_NODE)
     public void log_LsNode(Object payload) {
 

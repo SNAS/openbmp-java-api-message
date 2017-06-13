@@ -115,7 +115,9 @@ public enum MsgBusFields {
     LABELS("labels", ""),
     LS_SR_CAPABILITIES("sr_capabilities", ""),
     LS_ADJACENCY_SID("sr_adjacency_sid", ""),
-    LS_PREFIX_SID("sr_prefix_sid", "");
+    LS_PREFIX_SID("sr_prefix_sid", ""),
+    VPN_RD("rd", ""),
+    VPN_RD_TYPE("rd_type", 1);
 
 
     private final String name;

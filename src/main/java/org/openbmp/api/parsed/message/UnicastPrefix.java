@@ -28,7 +28,8 @@ import java.util.List;
 public class UnicastPrefix extends Base {
 
     // Minimum set of headers each Object will have.
-    String[] schemaHeaderNames = new String[]{MsgBusFields.ACTION.getName(), MsgBusFields.SEQUENCE.getName(), MsgBusFields.HASH.getName(), MsgBusFields.ROUTER_HASH.getName(), MsgBusFields.ROUTER_IP.getName(),
+    public static String[] schemaHeaderNames = new String[] {
+            MsgBusFields.ACTION.getName(), MsgBusFields.SEQUENCE.getName(), MsgBusFields.HASH.getName(), MsgBusFields.ROUTER_HASH.getName(), MsgBusFields.ROUTER_IP.getName(),
             MsgBusFields.BASE_ATTR_HASH.getName(), MsgBusFields.PEER_HASH.getName(), MsgBusFields.PEER_IP.getName(), MsgBusFields.PEER_ASN.getName(), MsgBusFields.TIMESTAMP.getName(),
             MsgBusFields.PREFIX.getName(), MsgBusFields.PREFIX_LEN.getName(), MsgBusFields.IS_IPV4.getName(), MsgBusFields.ORIGIN.getName(), MsgBusFields.AS_PATH.getName(),
             MsgBusFields.AS_PATH_COUNT.getName(), MsgBusFields.ORIGIN_AS.getName(), MsgBusFields.NEXTHOP.getName(), MsgBusFields.MED.getName(), MsgBusFields.LOCAL_PREF.getName(),

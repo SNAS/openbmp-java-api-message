@@ -24,6 +24,7 @@ public interface SinkInput {
     String LS_NODE = "ls_node";
     String LS_LINK = "ls_link";
     String LS_PREFIX = "ls_prefix";
+    String L3VPN = "l3vpn";
 
     @Input(COLLECTOR)
     SubscribableChannel collector();
@@ -36,6 +37,9 @@ public interface SinkInput {
 
     @Input(UNICAST_PREFIX)
     SubscribableChannel unicast_prefix();
+
+    @Input(L3VPN)
+    SubscribableChannel l3vpn();
 
     @Input(LS_NODE)
     SubscribableChannel ls_node();
