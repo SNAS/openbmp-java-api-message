@@ -117,7 +117,10 @@ public enum MsgBusFields {
     LS_ADJACENCY_SID("sr_adjacency_sid", ""),
     LS_PREFIX_SID("sr_prefix_sid", ""),
     VPN_RD("rd", ""),
-    VPN_RD_TYPE("rd_type", 1);
+    VPN_RD_TYPE("rd_type", 1),
+    IS_LOCRIB("isLocRib", 0),
+    IS_LOCRIB_FILTERED("isLocRibFiltered", 0),
+    TABLE_NAME("tableName", "");
 
 
     private final String name;

@@ -15,10 +15,14 @@ import org.supercsv.cellprocessor.ParseLong;
 import org.supercsv.cellprocessor.constraint.NotNull;
 import org.supercsv.cellprocessor.ift.CellProcessor;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Format class for peer parsed messages (openbmp.parsed.peer)
  * <p>
- * Schema Version: 1.4
+ * Schema Version: 1.6
  */
 public class Peer extends Base {
 
@@ -29,7 +33,10 @@ public class Peer extends Base {
             MsgBusFields.LOCAL_IP.getName(), MsgBusFields.LOCAL_PORT.getName(), MsgBusFields.LOCAL_BGP_ID.getName(), MsgBusFields.INFO_DATA.getName(), MsgBusFields.ADV_CAP.getName(),
             MsgBusFields.RECV_CAP.getName(), MsgBusFields.REMOTE_HOLDDOWN.getName(), MsgBusFields.ADV_HOLDDOWN.getName(), MsgBusFields.BMP_REASON.getName(),
             MsgBusFields.BGP_ERROR_CODE.getName(), MsgBusFields.BGP_ERROR_SUB_CODE.getName(), MsgBusFields.ERROR_TEXT.getName(), MsgBusFields.IS_L3VPN.getName(),
-            MsgBusFields.ISPREPOLICY.getName(), MsgBusFields.IS_IPV4.getName()};
+            MsgBusFields.ISPREPOLICY.getName(), MsgBusFields.IS_IPV4.getName(),
+            MsgBusFields.IS_LOCRIB.getName(), MsgBusFields.IS_LOCRIB_FILTERED.getName(),
+            MsgBusFields.TABLE_NAME.getName()
+    };
 
 
     /**
@@ -70,7 +77,9 @@ public class Peer extends Base {
      */
     protected CellProcessor[] getProcessors() {
 
-        final CellProcessor[] processors = new CellProcessor[]{
+        CellProcessor[] processors;
+
+        final CellProcessor[] defaultCellProcessors = new CellProcessor[]{
                 new NotNull(),                      // action
                 new ParseLong(),                    // seq
                 new NotNull(),                      // hash
@@ -100,6 +109,24 @@ public class Peer extends Base {
                 new ParseLongEmptyAsZero(),         // isPrePolicy
                 new ParseLongEmptyAsZero()          // isIPv4
         };
+
+        if (spec_version.compareTo((float) 1.6) >= 0) {
+
+            CellProcessor[] versionSpecificProcessors = new CellProcessor[]{
+                    new ParseLongEmptyAsZero(),         // isLocRib
+                    new ParseLongEmptyAsZero(),         // isLocRibFiltered
+                    new ParseNullAsEmpty()              // Table/VRF Name
+            };
+
+            List<CellProcessor> processorsList = new ArrayList();
+            processorsList.addAll(Arrays.asList(defaultCellProcessors));
+            processorsList.addAll(Arrays.asList(versionSpecificProcessors));
+
+            processors = processorsList.toArray(new CellProcessor[processorsList.size()]);
+
+        } else {
+            processors = defaultCellProcessors;
+        }
 
         return processors;
     }

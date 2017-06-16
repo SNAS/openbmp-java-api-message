@@ -20,6 +20,7 @@ spring.cloud.stream:
 #spring.cloud.stream:
       bindings:
 
+
         # Collector channel
         collector:
           <<: *PARSED_TOPIC
@@ -39,6 +40,11 @@ spring.cloud.stream:
         unicast_prefix:
           <<: *PARSED_TOPIC
           destination: openbmp.parsed.unicast_prefix
+
+        # unicast_prefix channel
+        l3vpn:
+          <<: *PARSED_TOPIC
+          destination: openbmp.parsed.l3vpn
 
         # LS node channel
         ls_node:
