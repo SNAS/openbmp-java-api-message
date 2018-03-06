@@ -40,6 +40,7 @@ public enum MsgBusFields {
     AGGREGATOR("aggregator", ""),
     COMMUNITY_LIST("community_list", ""),
     EXT_COMMUNITY_LIST("ext_community_list", ""),
+    LARGE_COMMUNITY_LIST("large_community_list", ""),
     CLUSTER_LIST("cluster_list", ""),
     ISATOMICAGG("isAtomicAgg", 1),
     IS_NEXTHOP_IPV4("isNexthopIPv4", 1),

@@ -1,6 +1,6 @@
 package org.openbmp.api.parsed.message;
 /*
- * Copyright (c) 2015-2016 Cisco Systems, Inc. and others.  All rights reserved.
+ * Copyright (c) 2015-2018 Cisco Systems, Inc. and others.  All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v1.0 which accompanies this distribution,
@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Format class for unicast_prefix parsed messages (openbmp.parsed.unicast_prefix)
  * <p>
- * Schema Version: 1.4
+ * Schema Version: 1.7
  */
 public class UnicastPrefix extends Base {
 
@@ -36,7 +36,9 @@ public class UnicastPrefix extends Base {
             MsgBusFields.AGGREGATOR.getName(), MsgBusFields.COMMUNITY_LIST.getName(), MsgBusFields.EXT_COMMUNITY_LIST.getName(), MsgBusFields.CLUSTER_LIST.getName(), MsgBusFields.ISATOMICAGG.getName(),
             MsgBusFields.IS_NEXTHOP_IPV4.getName(), MsgBusFields.ORIGINATOR_ID.getName(),
             MsgBusFields.PATH_ID.getName(), MsgBusFields.LABELS.getName(),
-            MsgBusFields.ISPREPOLICY.getName(), MsgBusFields.IS_ADJ_RIB_IN.getName()};
+            MsgBusFields.ISPREPOLICY.getName(), MsgBusFields.IS_ADJ_RIB_IN.getName(),
+            MsgBusFields.LARGE_COMMUNITY_LIST.getName()
+    };
 
 
     /**
@@ -113,7 +115,22 @@ public class UnicastPrefix extends Base {
 
         };
 
-        if (spec_version.compareTo((float) 1.3) >= 0) {
+        if (spec_version.compareTo((float) 1.7) >= 0) {
+            CellProcessor[] versionSpecificProcessors = new CellProcessor[]{
+                    new ParseLongEmptyAsZero(),         // Path ID
+                    new ParseNullAsEmpty(),             // Labels
+                    new ParseLongEmptyAsZero(),         // isPrePolicy
+                    new ParseLongEmptyAsZero(),         // isAdjRibIn
+                    new ParseNullAsEmpty()              // Large Communities
+            };
+
+            List<CellProcessor> processorsList = new ArrayList();
+            processorsList.addAll(Arrays.asList(defaultCellProcessors));
+            processorsList.addAll(Arrays.asList(versionSpecificProcessors));
+
+            processors = processorsList.toArray(new CellProcessor[processorsList.size()]);
+
+        } else if (spec_version.compareTo((float) 1.3) >= 0) {
 
             CellProcessor[] versionSpecificProcessors = new CellProcessor[]{
                     new ParseLongEmptyAsZero(),         // Path ID
