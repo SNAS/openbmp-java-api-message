@@ -61,7 +61,8 @@ public class L3VpnPrefix extends Base {
             MsgBusFields.ISPREPOLICY.getName(),
             MsgBusFields.IS_ADJ_RIB_IN.getName(),
             MsgBusFields.VPN_RD.getName(),
-            MsgBusFields.VPN_RD_TYPE.getName()
+            MsgBusFields.VPN_RD_TYPE.getName(),
+            MsgBusFields.LARGE_COMMUNITY_LIST.getName()
     };
 
 
@@ -144,7 +145,21 @@ public class L3VpnPrefix extends Base {
                 new ParseNullAsEmpty()              // VPN Type
         };
 
-        processors = defaultCellProcessors;
+        if (spec_version.compareTo((float) 1.7) >= 0) {
+            CellProcessor[] versionSpecificProcessors = new CellProcessor[]{
+                    new ParseNullAsEmpty()              // Large Communities
+            };
+
+            List<CellProcessor> processorsList = new ArrayList();
+            processorsList.addAll(Arrays.asList(defaultCellProcessors));
+            processorsList.addAll(Arrays.asList(versionSpecificProcessors));
+
+            processors = processorsList.toArray(new CellProcessor[processorsList.size()]);
+
+        } else {
+            processors = defaultCellProcessors;
+        }
+
 
         return processors;
     }
