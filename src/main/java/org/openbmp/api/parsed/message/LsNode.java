@@ -92,7 +92,7 @@ public class LsNode extends Base {
                 new ParseNullAsEmpty(),         // igp_router_id
                 new ParseNullAsEmpty(),         // router_id
                 new ParseNullAsEmpty(),         // routing_id
-                new ParseNullAsEmpty(),         // ls_id
+                new ParseLongEmptyAsZero(),         // ls_id
                 new ParseNullAsEmpty(),         // mt_id
                 new ParseNullAsEmpty(),         // ospf_area_id
                 new ParseNullAsEmpty(),         // isis_area_id
